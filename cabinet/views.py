@@ -18,9 +18,7 @@ def cabinet(request):
     lessons_g3 = lesson_statuses.filter(lesson__grade=3)
     lessons_g3_done = lessons_g3.filter(status='done')
 
-    g1_progress = 0
-    g2_progress = 0
-    g3_progress = 0
+    g1_progress, g2_progress, g3_progress = 0, 0, 0
 
     try:
         g1_progress = round(len(lessons_g1_done) / (len(lessons_g1) / 100))

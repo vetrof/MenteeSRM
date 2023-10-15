@@ -32,3 +32,5 @@ venv/
 .DS_Store
 templates/
 DESIGN/
+static/
+temp.py
