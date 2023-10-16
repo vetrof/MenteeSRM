@@ -35,7 +35,8 @@ def cabinet(request):
             'id': lesson.id,
             'grade': lesson.grade,
             'topic': lesson.topic.title,
-            'title': lesson.title
+            'title': lesson.title,
+            'get_absolute_url': lesson.get_absolute_url,
         }
         for status in lesson_statuses:
             if status.lesson.id == lesson.id:

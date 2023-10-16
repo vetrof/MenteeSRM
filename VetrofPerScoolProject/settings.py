@@ -24,6 +24,7 @@ SECRET_KEY = 'django-insecure-oc$g!4$cy8nr1zfp03q$^v_u69jq@u^g+w@-^0a$kc6ie^slqs
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -39,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'courses',
+    'widget_tweaks',
+    'markdownx',
 ]
 
 MIDDLEWARE = [
@@ -119,6 +122,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+# STATIC_ROOT = BASE_DIR / 'static'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'

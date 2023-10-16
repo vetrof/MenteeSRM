@@ -1,4 +1,5 @@
 from django.contrib import admin
+from markdownx.admin import MarkdownxModelAdmin
 
 from courses.models import Lesson, Topic, Grade, Course, LessonStatus
 
@@ -14,7 +15,7 @@ def copy_selected_items(modeladmin, request, queryset):
 class LessonAdmin(admin.ModelAdmin):
     list_display = ['id','course', 'grade', 'num_topic', 'topic', 'num_lesson', 'title']
     list_display_links = ['topic', 'num_lesson', 'title']
-    ordering = ['grade', 'topic__num_topic', 'num_lesson']
+    ordering = ['grade', 'topic__num_topic', 'num_lesson', 'id']
     actions = [copy_selected_items]
     list_filter = ['grade', 'topic']
 

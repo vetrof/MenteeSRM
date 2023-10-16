@@ -15,7 +15,12 @@ class UserRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'email']
+        fields = ['username', 'email']
+
+    def __init__(self, *args, **kwargs):
+        super(UserRegistrationForm, self).__init__(*args, **kwargs)
+        self.fields['username'].label = 'username'
+        self.fields['email'].label = 'email'
 
     def clean_password2(self):
         cd = self.cleaned_data

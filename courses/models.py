@@ -6,6 +6,9 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.urls import reverse
+from markdownx.models import MarkdownxField
+from markdownx.utils import markdownify
 
 
 class Course(models.Model):
@@ -40,9 +43,17 @@ class Lesson(models.Model):
     num_lesson = models.FloatField()
     title = models.CharField(max_length=300)
     info = models.TextField(blank=True)
+    description = MarkdownxField()
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('lesson_detail', args=[str(self.id)])
+
+    @property
+    def formatted_markdown(self):
+        return markdownify(self.description)
 
 
 class LessonStatus(models.Model):
