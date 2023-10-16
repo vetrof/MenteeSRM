@@ -1,16 +1,6 @@
-import requests
+from googleapiclient import 
+# calendar
 
-url = "https://v1.nocodeapi.com/vetrof/calendar/BLDRYJNgaCLQIrfw/calendarList"
-params = {}
-r = requests.get(url = url, params = params)
-result = r.json()
-print(result)
+calendar = service.calendars().get(calendarId='primary').execute()
 
-
-
-class Course(models.Model):
-    title = models.CharField(max_length=200)
-    info = models.TextField(blank=True)
-
-    def __str__(self):
-        return self.title
+print calendar['summary']
