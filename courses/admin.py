@@ -1,7 +1,7 @@
 from django.contrib import admin
 from markdownx.admin import MarkdownxModelAdmin
 
-from courses.models import Lesson, Topic, Grade, Course, LessonStatus
+from courses.models import Lesson, Topic, Grade, Course, LessonStatus, Notes
 
 
 def copy_selected_items(modeladmin, request, queryset):
@@ -29,5 +29,6 @@ admin.site.register(Course)
 admin.site.register(Grade)
 admin.site.register(Topic)
 admin.site.register(LessonStatus)
+admin.site.register(Notes)
 
 

@@ -142,3 +142,10 @@ AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
                            'accounts.authentication.EmailAuthBackend',
                            # 'social_core.backends.google.GoogleOAuth2',
                            ]
+
+# EMAIL_HOST = 'smtp.yandex.ru'
+# EMAIL_PORT = 465
+# EMAIL_HOST_USER = "vetrof@yandex.ru"
+# EMAIL_HOST_PASSWORD = "jaosbhynlajgkdkx"
+# EMAIL_USE_TLS = False
+# EMAIL_USE_SSL = True

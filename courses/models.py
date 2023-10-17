@@ -86,3 +86,9 @@ def create_lesson_statuses_for_new_user(sender, instance, created, **kwargs):
         lessons = Lesson.objects.all()
         for lesson in lessons:
             LessonStatus.objects.get_or_create(user=instance, lesson=lesson)
+
+
+class Notes(models.Model):
+    info = MarkdownxField()
+    date = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
