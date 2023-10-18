@@ -1,7 +1,7 @@
 from django.contrib import admin
 from markdownx.admin import MarkdownxModelAdmin
 
-from courses.models import Lesson, Topic, Grade, Course, LessonStatus, Notes
+from courses.models import Lesson, Topic, Grade, Course, LessonStatus, Notes, Question
 
 
 def copy_selected_items(modeladmin, request, queryset):
@@ -25,10 +25,17 @@ class LessonAdmin(admin.ModelAdmin):
 
     num_topic.short_description = 'Topic Number'
 
+
+@admin.register(Notes)
+class NotesAdmin(admin.ModelAdmin):
+    list_display = ['author', 'user', 'date']
+    list_filter = ['user']
+
+
 admin.site.register(Course)
 admin.site.register(Grade)
 admin.site.register(Topic)
 admin.site.register(LessonStatus)
-admin.site.register(Notes)
+admin.site.register(Question)
 
 

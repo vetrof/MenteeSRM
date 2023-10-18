@@ -92,3 +92,14 @@ class Notes(models.Model):
     info = MarkdownxField()
     date = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
+
+    def __str__(self):
+        return f"{self.id}"
+
+
+class Question(models.Model):
+    date = models.DateTimeField(auto_now=True)
+    client_info = models.TextField()
+    text = models.TextField(blank=True)
+
