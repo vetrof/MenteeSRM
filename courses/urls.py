@@ -1,6 +1,6 @@
 from django.urls import path
 from cabinet.views import cabinet, change_lesson_status
-from courses.views import index_page, contacts_page, helpers_page, lesson_detail, calendar, sticky_wall, edit_note
+from courses.views import index_page, contacts_page, helpers_page, lesson_detail, calendar, sticky_wall, edit_note, lesson_detail_notion
 
 # index/...
 urlpatterns = [
@@ -10,6 +10,9 @@ urlpatterns = [
     path('calendar/', calendar, name='calendar'),
     path('sticky/', sticky_wall, name='sticky_wall'),
     path('sticky/<int:id>', edit_note, name='edit_note'),
+
+    path('lesson_notion/', lesson_detail_notion, name='lesson_detail_notion'),
+
     path('', index_page, name='index'),
 
 ]

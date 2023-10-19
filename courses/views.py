@@ -1,3 +1,4 @@
+import requests
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
@@ -69,3 +70,10 @@ def sticky_wall(request):
         form = NotesForm()
 
     return render(request, 'sticky_wall.html', {'notes': notes, 'form': form})
+
+
+def lesson_detail_notion(request):
+    data = requests.get(
+        'https://different-candle-b8a.notion.site/Google-social-token-3522cedf7b584032a74e73330ff1ea87').text
+
+    return render(request, 'lesson_detail_notion.html', {'data': data})

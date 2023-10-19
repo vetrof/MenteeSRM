@@ -43,6 +43,7 @@ class Lesson(models.Model):
     num_lesson = models.FloatField()
     title = models.CharField(max_length=300)
     info = models.TextField(blank=True)
+    info_hide = models.TextField(blank=True)
     description = MarkdownxField()
 
     def __str__(self):

@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-oc$g!4$cy8nr1zfp03q$^v_u69jq@u^g+w@-^0a$kc6ie^slqs
 DEBUG = True
 # DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'courses',
     'widget_tweaks',
     'markdownx',
+    'django_extensions',
+    'django_summernote',
 ]
 
 MIDDLEWARE = [
@@ -121,8 +123,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-# STATIC_ROOT = BASE_DIR / 'static'
+if DEBUG:
+    STATICFILES_DIRS = (
+        BASE_DIR / 'static',
+    )
+else:
+    STATIC_ROOT = BASE_DIR / 'static'
+
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -149,3 +156,5 @@ AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
 # EMAIL_HOST_PASSWORD = "jaosbhynlajgkdkx"
 # EMAIL_USE_TLS = False
 # EMAIL_USE_SSL = True
+
+# notion secret secret_twP7DqCB1LIiGfHHjDIn49KcUsrFL7bI7RbAhT2CNIy

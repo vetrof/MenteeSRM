@@ -1,6 +1,7 @@
-from googleapiclient import 
-# calendar
+import json
+import requests
 
-calendar = service.calendars().get(calendarId='primary').execute()
+# https://different-candle-b8a.notion.site/Helpers-32c028d4516c4a9ca7f8a9f7a7bfa18b?pvs=4
 
-print calendar['summary']
+token = 'secret_twP7DqCB1LIiGfHHjDIn49KcUsrFL7bI7RbAhT2CNIy'
+database_id = 'Helpers-32c028d4516c4a9ca7f8a9f7a7bfa18b'
