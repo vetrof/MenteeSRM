@@ -35,3 +35,8 @@ DESIGN/
 static/
 temp.py
 temp.html
+
+cert.crt
+cert.key
+key.pem
+old ssl

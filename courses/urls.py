@@ -9,6 +9,7 @@ urlpatterns = [
     path('lesson/<int:id>/', lesson_detail, name='lesson_detail'),
     path('calendar/', calendar, name='calendar'),
     path('sticky/', sticky_wall, name='sticky_wall'),
+    path('sticky/user/<int:user_id>', sticky_wall, name='sticky_wall_user_id'),
     path('sticky/<int:id>', edit_note, name='edit_note'),
 
     path('lesson_notion/', lesson_detail_notion, name='lesson_detail_notion'),

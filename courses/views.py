@@ -1,5 +1,6 @@
 import requests
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
 from courses.forms import NotesForm, QuestionForm
@@ -55,21 +56,27 @@ def edit_note(request, id):
 
 
 @login_required
-def sticky_wall(request):
-    notes = Notes.objects.filter(user=request.user).order_by('-id')
+def sticky_wall(request, user_id=None):
+    if user_id and request.user.is_superuser:
+        current_user = User.objects.get(id=user_id)
+    else:
+        current_user = request.user
+
+    users = User.objects.all()
+    notes = Notes.objects.filter(user=current_user).order_by('-id')
 
     if request.method == 'POST':
         form = NotesForm(request.POST)
         if form.is_valid():
             note = form.save(commit=False)
-            note.user = request.user
+            note.user = current_user
             note.author = request.user
             note.save()
             return redirect('sticky_wall')
     else:
         form = NotesForm()
 
-    return render(request, 'sticky_wall.html', {'notes': notes, 'form': form})
+    return render(request, 'sticky_wall.html', {'notes': notes, 'form': form, 'current_user': current_user, 'users': users})
 
 
 def lesson_detail_notion(request):
