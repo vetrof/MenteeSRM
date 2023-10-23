@@ -72,7 +72,7 @@ def cabinet(request, user_id=None):
 
     # view lesson as user
     if request.user.is_superuser:
-        users = User.objects.all()
+        users = User.objects.filter(profile__current_mentee=True)
 
 
     return render(request, 'cabinet.html', {'lessons': lessons_dict, 'progress': progress, 'users': users, 'current_user': current_user, 'username': username})

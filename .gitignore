@@ -40,3 +40,5 @@ cert.crt
 cert.key
 key.pem
 old ssl
+cert.crt
+cert.key

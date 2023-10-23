@@ -62,7 +62,7 @@ def sticky_wall(request, user_id=None):
     else:
         current_user = request.user
 
-    users = User.objects.all()
+    users = User.objects.filter(profile__current_mentee=True)
     notes = Notes.objects.filter(user=current_user).order_by('-id')
 
     if request.method == 'POST':
