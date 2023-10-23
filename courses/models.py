@@ -10,11 +10,7 @@ from django.urls import reverse
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
 
-
-
-
-
-
+# courses model
 class Course(models.Model):
     title = models.CharField(max_length=200)
     info = models.TextField(blank=True)
