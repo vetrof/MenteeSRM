@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_summernote',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_dbml',
 ]
 
 MIDDLEWARE = [

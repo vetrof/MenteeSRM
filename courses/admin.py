@@ -19,11 +19,12 @@ def copy_selected_items(modeladmin, request, queryset):
 @admin.register(Lesson)
 class LessonAdmin(SummernoteModelAdmin):
     list_display = ['id', 'course', 'grade', 'num_topic', 'topic', 'num_lesson', 'title']
-    list_display_links = ['topic', 'num_lesson', 'title']
+    list_display_links = [ 'title']
     ordering = ['grade', 'topic__num_topic', 'num_lesson', 'id']
     actions = [copy_selected_items]
     list_filter = ['grade', 'topic']
     summernote_fields = '__all__'
+    list_editable = ['num_lesson', 'topic']
 
 
     def num_topic(self, obj):
@@ -43,9 +44,17 @@ class QuestionAdmin(admin.ModelAdmin):
     list_display = ['id', 'date', 'client_info']
 
 
+@admin.register(Topic)
+class TopicAdmin(admin.ModelAdmin):
+    list_display = ['grade', 'num_topic', 'title']
+    list_display_links = ['title']
+    ordering = ['grade__level', 'num_topic']
+    list_editable = ['grade', 'num_topic']
+    list_filter = ['grade']
+
+
 admin.site.register(Course)
 admin.site.register(Grade)
-admin.site.register(Topic, LessonTextEditAdmin)
 admin.site.register(LessonStatus)
 
 
