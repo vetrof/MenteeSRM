@@ -4,6 +4,8 @@ from courses.views import index_page, contacts_page, helpers_page, lesson_detail
 
 # index/...
 urlpatterns = [
+    path('python/', cabinet, name='python'),
+    path('kotlin/', cabinet, name='kotlin'),
     path('contacts/', contacts_page, name='contacts'),
     path('helpers/', helpers_page, name='helpers'),
     path('lesson/<int:id>/', lesson_detail, name='lesson_detail'),

@@ -3,34 +3,38 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render
 
-from courses.models import Lesson, LessonStatus
+from courses.models import Lesson, LessonStatus, Course
 
 
-def cabinet(request, user_id=None):
+def cabinet(request, user_id=None, course_name=None):
+    course = course_name
     current_user = request.user.id
     users = {}
     username = request.user
     if request.user.is_authenticated:
-
+        # if user authenticated AND NOT superuser:
         if request.user.is_superuser and user_id != None:
             user = User.objects.get(id=user_id)
             current_user = user_id
             username = user
-            lessons = Lesson.objects.all().order_by('grade', 'topic__num_topic', 'num_lesson')
+            lessons = Lesson.objects.filter(topic__course__title=course_name).order_by('topic__grade', 'topic__num_topic', 'num_lesson')
             lesson_statuses = LessonStatus.objects.filter(user=user, lesson__in=lessons)
+        # if user superuser:
         else:
-            lessons = Lesson.objects.all().order_by('grade', 'topic__num_topic', 'num_lesson')
+            # lessons = Lesson.objects.all().order_by('topic__grade', 'topic__num_topic', 'num_lesson')
+            lessons = Lesson.objects.filter(topic__course__title=course_name).order_by('topic__grade', 'topic__num_topic', 'num_lesson')
             lesson_statuses = LessonStatus.objects.filter(user=request.user, lesson__in=lessons)
+
 
 
         g1_progress, g2_progress, g3_progress = 0, 0, 0
 
         # calculate progress
-        lessons_g1 = lesson_statuses.filter(lesson__grade=1)
+        lessons_g1 = lesson_statuses.filter(lesson__topic__grade=1)
         lessons_g1_done = lessons_g1.filter(status='done')
-        lessons_g2 = lesson_statuses.filter(lesson__grade=2)
+        lessons_g2 = lesson_statuses.filter(lesson__topic__grade=2)
         lessons_g2_done = lessons_g2.filter(status='done')
-        lessons_g3 = lesson_statuses.filter(lesson__grade=3)
+        lessons_g3 = lesson_statuses.filter(lesson__topic__grade=3)
         lessons_g3_done = lessons_g3.filter(status='done')
 
         try:
@@ -46,7 +50,7 @@ def cabinet(request, user_id=None):
         for lesson in lessons:
             add = {
                 'id': lesson.id,
-                'grade': lesson.grade,
+                'grade': lesson.topic.grade,
                 'topic': lesson.topic.title,
                 'title': lesson.title,
                 'get_absolute_url': lesson.get_absolute_url,
@@ -56,26 +60,25 @@ def cabinet(request, user_id=None):
                     add['status'] = status.status
             lessons_dict.append(add)
     else:
-        lessons = Lesson.objects.all().order_by('grade', 'topic__num_topic', 'num_lesson')
+        lessons = Lesson.objects.filter(topic__course__title=course_name).order_by('topic__grade', 'topic__num_topic', 'num_lesson')
         lessons_dict = []
         for lesson in lessons:
             add = {
                 'id': lesson.id,
-                'grade': lesson.grade,
+                'grade': lesson.topic.grade,
                 'topic': lesson.topic.title,
                 'title': lesson.title,
                 'get_absolute_url': lesson.get_absolute_url,
             }
 
             lessons_dict.append(add)
-        return render(request, 'cabinet.html', {'lessons': lessons_dict})
+        return render(request, 'cabinet.html', {'lessons': lessons_dict, 'course': course})
 
     # view lesson as user
     if request.user.is_superuser:
         users = User.objects.filter(profile__current_mentee=True)
 
-
-    return render(request, 'cabinet.html', {'lessons': lessons_dict, 'progress': progress, 'users': users, 'current_user': current_user, 'username': username})
+    return render(request, 'cabinet.html', {'lessons': lessons_dict, 'progress': progress, 'users': users, 'current_user': current_user, 'username': username, 'course': course})
 
 
 @login_required

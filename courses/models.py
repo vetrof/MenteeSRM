@@ -28,6 +28,7 @@ class Grade(models.Model):
 
 
 class Topic(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     num_topic = models.IntegerField()
@@ -37,18 +38,15 @@ class Topic(models.Model):
         ordering = ['num_topic']
 
     def __str__(self):
-        return f'G{self.grade.level} T{self.num_topic} | {self.title} '
+        return f'{self.grade.level}: {self.num_topic} {self.title} '
 
 
 class Lesson(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=True, null=True)
-    grade = models.ForeignKey(Grade, on_delete=models.CASCADE, blank=True, null=True)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
-    num_lesson = models.FloatField()
+    num_lesson = models.IntegerField()
     title = models.CharField(max_length=300)
     info = models.TextField(blank=True)
     info_hide = models.TextField(blank=True)
-    description = MarkdownxField(blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -106,4 +104,3 @@ class Question(models.Model):
     date = models.DateTimeField(auto_now=True)
     client_info = models.TextField()
     text = models.TextField(blank=True)
-

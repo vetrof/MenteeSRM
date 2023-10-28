@@ -18,17 +18,37 @@ def copy_selected_items(modeladmin, request, queryset):
 
 @admin.register(Lesson)
 class LessonAdmin(SummernoteModelAdmin):
-    list_display = ['id', 'course', 'grade', 'num_topic', 'topic', 'num_lesson', 'title']
-    list_display_links = [ 'title']
-    ordering = ['grade', 'topic__num_topic', 'num_lesson', 'id']
+    list_display = ['topic_course', 'topic_grade', 'num_topic', 'topic_title', 'num_lesson', 'title']
+    list_display_links = ['title']
+    ordering = ['topic__course', 'topic__grade', 'topic__num_topic', 'num_lesson']
     actions = [copy_selected_items]
-    list_filter = ['grade', 'topic']
+    list_filter = ['topic__grade', 'topic']
     summernote_fields = '__all__'
-    list_editable = ['num_lesson', 'topic']
+    list_editable = ['num_lesson']
+
+    fieldsets = [
+        ('Lesson Info', {
+            'fields': ['topic', 'num_lesson', 'title', 'info'],
+        }),
+        ('Hidden Info', {
+            'classes': ('collapse',),
+            'fields': ['info_hide'],
+        }),
+    ]
+
 
 
     def num_topic(self, obj):
         return obj.topic.num_topic
+
+    def topic_title(self, obj):
+        return obj.topic.title
+
+    def topic_grade(self, obj):
+        return obj.topic.grade
+
+    def topic_course(self, obj):
+        return obj.topic.course
 
     num_topic.short_description = 'Topic Number'
 
@@ -46,10 +66,10 @@ class QuestionAdmin(admin.ModelAdmin):
 
 @admin.register(Topic)
 class TopicAdmin(admin.ModelAdmin):
-    list_display = ['grade', 'num_topic', 'title']
+    list_display = ['course', 'grade', 'num_topic', 'title']
     list_display_links = ['title']
-    ordering = ['grade__level', 'num_topic']
-    list_editable = ['grade', 'num_topic']
+    ordering = ['course', 'grade__level', 'num_topic']
+    list_editable = ['num_topic']
     list_filter = ['grade']
 
 

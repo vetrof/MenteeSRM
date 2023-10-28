@@ -1,7 +1,18 @@
-import json
-import requests
+[Unit]
+Description=Django-Q Cluster Service
+After=network.target
+[Service]
+User=vetrof
+WorkingDirectory=/home/vetrof/django
+ExecStart=/home/vetrof/django/venv/bin/python /home/vetrof/django/manage.py qcluster
+Restart=always
+[Install]
+WantedBy=multi-user.target
 
-# https://different-candle-b8a.notion.site/Helpers-32c028d4516c4a9ca7f8a9f7a7bfa18b?pvs=4
+sudo systemctl daemon-reload
+sudo systemctl enable qcluster
+sudo systemctl start qcluster
+sudo systemctl status qcluster
+sudo nano /etc/systemd/system/qcluster.service
 
-token = 'secret_twP7DqCB1LIiGfHHjDIn49KcUsrFL7bI7RbAhT2CNIy'
-database_id = 'Helpers-32c028d4516c4a9ca7f8a9f7a7bfa18b'
+sudo nano /etc/systemd/system/qcluster.service

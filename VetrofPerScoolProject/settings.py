@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_dbml',
+    'django_q',
 ]
 
 MIDDLEWARE = [
@@ -157,7 +158,7 @@ AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
 
 SUMMERNOTE_CONFIG = {
     'summernote': {
-        'airMode': False,  # Включить режим в воздухе
+        # 'airMode': True,  # Включить режим в воздухе
 
         # Change editor size
         'width': '1500',
@@ -171,4 +172,15 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
+}
+
+Q_CLUSTER = {
+    'name': 'DjangORM',
+    'workers': 4,
+    'retry': 600,
+    'timeout': 500,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default',
+    'catch_up': False,
 }
