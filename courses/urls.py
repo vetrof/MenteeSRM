@@ -1,11 +1,8 @@
 from django.urls import path, include
-from cabinet.views import cabinet, change_lesson_status
 from courses.views import index_page, contacts_page, helpers_page, lesson_detail, calendar, sticky_wall, edit_note, lesson_detail_notion
 
 # index/...
 urlpatterns = [
-    path('python/', cabinet, name='python'),
-    path('kotlin/', cabinet, name='kotlin'),
     path('contacts/', contacts_page, name='contacts'),
     path('helpers/', helpers_page, name='helpers'),
     path('lesson/<int:id>/', lesson_detail, name='lesson_detail'),
