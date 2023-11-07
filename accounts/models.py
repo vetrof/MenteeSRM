@@ -11,5 +11,6 @@ class Profile(models.Model):
     g1 = models.BooleanField(default=False)
     g2 = models.BooleanField(default=False)
     g3 = models.BooleanField(default=False)
+
     def __str__(self):
         return f'Profile of {self.user.username}'

@@ -9,21 +9,27 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+import environ
+
+env = environ.Env(
+    DEBUG=(bool, False),
+                  )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+environ.Env.read_env(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-oc$g!4$cy8nr1zfp03q$^v_u69jq@u^g+w@-^0a$kc6ie^slqs'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = False
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
@@ -46,6 +52,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_dbml',
     'django_q',
+    'message',
+    'tbot',
 ]
 
 MIDDLEWARE = [
@@ -140,31 +148,27 @@ LOGIN_REDIRECT_URL = 'sticky_wall'
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
                            'accounts.authentication.EmailAuthBackend',
                            # 'social_core.backends.google.GoogleOAuth2',
                            ]
 
-# EMAIL_HOST = 'smtp.yandex.ru'
-# EMAIL_PORT = 465
-# EMAIL_HOST_USER = "vetrof@yandex.ru"
-# EMAIL_HOST_PASSWORD = "jaosbhynlajgkdkx"
-# EMAIL_USE_TLS = False
-# EMAIL_USE_SSL = True
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# notion secret secret_twP7DqCB1LIiGfHHjDIn49KcUsrFL7bI7RbAhT2CNIy
+# sendgreed setup
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = env('SENDGRID_API_KEY')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 SUMMERNOTE_CONFIG = {
     'summernote': {
-        # 'airMode': True,  # Включить режим в воздухе
-
+        # 'airMode': True,
         # Change editor size
-        'width': '1500',
+        'width': '900',
         'height': '800',
-
-
     },
 }
 
@@ -184,3 +188,6 @@ Q_CLUSTER = {
     'orm': 'default',
     'catch_up': False,
 }
+
+TELEGRAM_TOKEN = env('TELEGRAM_TOKEN')
+TELEGRAM_BOT_WEBHOOK_URL = env('TELEGRAM_BOT_WEBHOOK_URL')

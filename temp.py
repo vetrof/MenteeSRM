@@ -1,18 +1,15 @@
-[Unit]
-Description=Django-Q Cluster Service
-After=network.target
-[Service]
-User=vetrof
-WorkingDirectory=/home/vetrof/django
-ExecStart=/home/vetrof/django/venv/bin/python /home/vetrof/django/manage.py qcluster
-Restart=always
-[Install]
-WantedBy=multi-user.target
+основные команды терминала
 
-sudo systemctl daemon-reload
-sudo systemctl enable qcluster
-sudo systemctl start qcluster
-sudo systemctl status qcluster
-sudo nano /etc/systemd/system/qcluster.service
+python3 -m venv myworld                 # создание окружения
+source myworld/bin/activate             # активация окружения
+-m pip install Django                   # установка джанго
+python3 -m django --version             # версия
+django-admin startproject myroject .    # создание проекта
+python3 manage.py startapp myapp        # создание приложения
+python3 manage.py runserver             # отладочный сервер
+python3 manage.py makemigrations        # создание миграций
+python3 manage.py migrate               # применение миграций
+python3 manage.py createsuperuser       # создание суперпользователя
+pip freeze > requirements.txt           # создание файла зависимостей
+pip install -r requirements.txt         # установка зависимостей
 
-sudo nano /etc/systemd/system/qcluster.service

@@ -22,7 +22,7 @@ class LessonAdmin(SummernoteModelAdmin):
     list_display_links = ['title']
     ordering = ['topic__course', 'topic__grade', 'topic__num_topic', 'num_lesson']
     actions = [copy_selected_items]
-    list_filter = ['topic__grade', 'topic']
+    list_filter = ['topic__course', 'topic__grade', 'topic']
     summernote_fields = '__all__'
     list_editable = ['num_lesson']
 
@@ -35,8 +35,6 @@ class LessonAdmin(SummernoteModelAdmin):
             'fields': ['info_hide'],
         }),
     ]
-
-
 
     def num_topic(self, obj):
         return obj.topic.num_topic
@@ -69,8 +67,8 @@ class TopicAdmin(admin.ModelAdmin):
     list_display = ['course', 'grade', 'num_topic', 'title']
     list_display_links = ['title']
     ordering = ['course', 'grade__level', 'num_topic']
-    list_editable = ['num_topic']
-    list_filter = ['grade']
+    list_editable = ['course', 'grade', 'num_topic']
+    list_filter = ['course', 'grade']
 
 
 admin.site.register(Course)

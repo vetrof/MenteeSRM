@@ -6,6 +6,7 @@ from courses.models import Lesson, LessonStatus
 class Study:
     def __init__(self, request):
         self.request = request
+        self.lesson_statuses = {}
 
     def mentee_List(self):
         if self.request.user.is_superuser:

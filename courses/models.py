@@ -38,7 +38,9 @@ class Topic(models.Model):
         ordering = ['num_topic']
 
     def __str__(self):
-        return f'{self.grade.level}: {self.num_topic} {self.title} '
+        course = self.course
+        course_short = str(course)[0]
+        return f'{course_short}{self.grade.level} {self.num_topic} - {self.title}'
 
 
 class Lesson(models.Model):

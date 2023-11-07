@@ -19,15 +19,16 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken import views
+from markdownx import urls as markdownx
 
 
 urlpatterns = [
-    path('markdownx/', include('markdownx.urls')),
     path('admin/', admin.site.urls),
     path('account/', include('accounts.urls')),
     path('cabinet/', include('cabinet.urls')),
     path('summernote/', include('django_summernote.urls')),
     path('api/', include('api.urls')),
+    path('tbot/', include('tbot.urls')),
     path('', include('courses.urls')),
 ]
 
@@ -37,4 +38,8 @@ if settings.DEBUG:
 
 urlpatterns += [
     path('api-token-auth/', views.obtain_auth_token)
+]
+
+urlpatterns += [
+    path('markdownx/', include(markdownx)),
 ]
