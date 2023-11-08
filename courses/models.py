@@ -94,6 +94,7 @@ class Notes(models.Model):
     date = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
+    on_top = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.id}"

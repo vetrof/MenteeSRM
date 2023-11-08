@@ -63,7 +63,8 @@ def sticky_wall(request, user_id=None):
         current_user = request.user
 
     users = User.objects.filter(profile__current_mentee=True)
-    notes = Notes.objects.filter(user=current_user).order_by('-id')
+    notes = Notes.objects.filter(user=current_user).order_by('-id').exclude(on_top=True)
+    top_notes = Notes.objects.filter(user=current_user, on_top=True).order_by('-id')
 
     if request.method == 'POST':
         form = NotesForm(request.POST)
@@ -76,7 +77,13 @@ def sticky_wall(request, user_id=None):
     else:
         form = NotesForm()
 
-    return render(request, 'sticky_wall.html', {'notes': notes, 'form': form, 'current_user': current_user, 'users': users})
+    return render(request, 'sticky_wall.html', {
+        'top_notes': top_notes,
+        'notes': notes,
+        'form': form,
+        'current_user': current_user,
+        'users': users
+    })
 
 
 def lesson_detail_notion(request):
