@@ -60,7 +60,7 @@ def calendar(request):
 @login_required
 def edit_note(request, id):
     note = Notes.objects.get(id=id)
-    if request.user != note.user:
+    if request.user != note.user and not request.user.is_staff:
         # Защита от редактирования чужих записок
         return redirect('sticky_wall')
 
@@ -68,9 +68,21 @@ def edit_note(request, id):
         form = NotesForm(request.POST, instance=note)
         if form.is_valid():
             form.save()
-            return redirect('sticky_wall')
+
+            # Получаем сохраненный URL предыдущей страницы из сессии
+            prev_url = request.session.get('prev_url')
+
+            if prev_url:
+                # Перенаправляем пользователя на сохраненную предыдущую страницу
+                return redirect(prev_url)
+            else:
+                # Если URL не сохранен, перенаправляем пользователя на 'sticky_wall' по умолчанию
+                return redirect('sticky_wall')
     else:
         form = NotesForm(instance=note)
+
+        # Сохраняем текущий URL в сессии как предыдущий URL
+        request.session['prev_url'] = request.META.get('HTTP_REFERER')
 
     return render(request, 'sticky_wall.html', {'form': form})
 

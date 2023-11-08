@@ -1,8 +1,10 @@
 from django.contrib import admin
 from markdownx.admin import MarkdownxModelAdmin
 from django_summernote.admin import SummernoteModelAdmin
-
+from django.conf import settings
+from django.contrib.auth.models import User
 from courses.models import Lesson, Topic, Grade, Course, LessonStatus, Notes, Question
+
 
 
 class LessonTextEditAdmin(SummernoteModelAdmin):  # instead of ModelAdmin
@@ -51,10 +53,24 @@ class LessonAdmin(SummernoteModelAdmin):
     num_topic.short_description = 'Topic Number'
 
 
+# @admin.register(Notes)
+# class NotesAdmin(admin.ModelAdmin):
+#     list_display = ['author', 'user', 'date']
+#     list_filter = ['user']
+
 @admin.register(Notes)
 class NotesAdmin(admin.ModelAdmin):
     list_display = ['author', 'user', 'date']
-    list_filter = ['user']
+    list_filter = ['user__profile__current_mentee', 'user']
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "user":
+            # Устанавливаем фильтрацию для поля "пользователь" (user) на тех, у кого установлена галочка "current_mentee"
+            kwargs["queryset"] = User.objects.filter(profile__current_mentee=True)
+        elif db_field.name == "author" and not request.META["PATH_INFO"].startswith('/admin/notes/notes/add'):
+            # Устанавливаем значение "автор" только при редактировании записи, а не при создании
+            kwargs["queryset"] = User.objects.filter(pk=request.user.id)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 @admin.register(Question)
