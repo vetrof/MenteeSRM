@@ -1,5 +1,5 @@
 from django.urls import path, include
-from courses.views import index_page, contacts_page, helpers_page, lesson_detail, calendar, sticky_wall, edit_note, lesson_detail_notion
+from courses.views import index_page, contacts_page, helpers_page, lesson_detail, calendar, sticky_wall, edit_note, lesson_detail_notion, no_permissions
 
 # index/...
 urlpatterns = [
@@ -13,6 +13,7 @@ urlpatterns = [
     path('markdownx/', include('markdownx.urls')),
 
     path('lesson_notion/', lesson_detail_notion, name='lesson_detail_notion'),
+    path('no_permissions/', no_permissions, name='no_permissions'),
 
     path('', index_page, name='index'),
 

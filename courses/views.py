@@ -1,7 +1,11 @@
+
+from django.contrib import messages
 import requests
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
+from django.db.models import Q
+from django.urls import reverse
 
 from courses.forms import NotesForm, QuestionForm
 from courses.models import Lesson, Notes
@@ -12,7 +16,8 @@ def index_page(request):
         form = QuestionForm(request.POST)
         if form.is_valid():
             form.save()
-
+            messages.success(request, 'Сообщение отправлено')  # Добавляем сообщение
+            return render(request, 'message_succes.html')
 
     form = QuestionForm()
     return render(request, 'index.html')
@@ -28,7 +33,22 @@ def helpers_page(request):
 
 @login_required
 def lesson_detail(request, id):
+    user_g1_status = True
+    user_g2_status = request.user.profile.g2
+    user_g3_status = request.user.profile.g3
     lesson = Lesson.objects.get(id=id)
+    lesson_grade = lesson.topic.grade.level
+
+    # check permissions
+    if lesson_grade == 3 and user_g3_status:
+        pass
+    elif lesson_grade == 2 and user_g2_status:
+        pass
+    elif lesson_grade == 1 and user_g1_status:
+        pass
+    else:
+        return redirect('no_permissions')
+
     return render(request, 'lesson_detail.html', {'lesson': lesson})
 
 
@@ -91,3 +111,7 @@ def lesson_detail_notion(request):
         'https://different-candle-b8a.notion.site/Google-social-token-3522cedf7b584032a74e73330ff1ea87').text
 
     return render(request, 'lesson_detail_notion.html', {'data': data})
+
+
+def no_permissions(request):
+    return render(request, 'no_permissions.html')
