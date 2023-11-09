@@ -30,6 +30,8 @@ urlpatterns = [
     path('api/', include('api.urls')),
     path('tbot/', include('tbot.urls')),
     path('', include('courses.urls')),
+
+
 ]
 
 if settings.DEBUG:
@@ -42,4 +44,8 @@ urlpatterns += [
 
 urlpatterns += [
     path('markdownx/', include(markdownx)),
+]
+
+urlpatterns += [
+    path("__debug__/", include("debug_toolbar.urls")),
 ]

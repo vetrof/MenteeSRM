@@ -46,3 +46,6 @@ base_backup
 sendgrid.env
 sendgrid.env
 /mailru-domainIDwqpHDTYlxUgdhX.html
+
+temp.*
+.gitignore

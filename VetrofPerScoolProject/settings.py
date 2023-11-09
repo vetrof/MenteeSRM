@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django_q',
     'message',
     'tbot',
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -64,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'VetrofPerScoolProject.urls'
@@ -191,3 +193,7 @@ Q_CLUSTER = {
 
 TELEGRAM_TOKEN = env('TELEGRAM_TOKEN')
 TELEGRAM_BOT_WEBHOOK_URL = env('TELEGRAM_BOT_WEBHOOK_URL')
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
