@@ -64,6 +64,7 @@ class LessonStatus(models.Model):
         ('not_started', 'Не начато'),
         ('in_progress', 'В процессе'),
         ('to_repeat', 'Повторить'),
+        ('next', 'Следущее'),
         ('done', 'Закончено'),
     ]
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='not_started')
