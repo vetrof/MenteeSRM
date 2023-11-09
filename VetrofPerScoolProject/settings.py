@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'message',
     'tbot',
     "debug_toolbar",
+    "taggit",
 ]
 
 MIDDLEWARE = [

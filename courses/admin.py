@@ -24,7 +24,7 @@ class LessonAdmin(SummernoteModelAdmin):
     list_display_links = ['title']
     ordering = ['topic__course', 'topic__grade', 'topic__num_topic', 'num_lesson']
     actions = [copy_selected_items]
-    list_filter = ['topic__course', 'topic__grade', 'topic']
+    list_filter = ['topic__course', 'topic__grade', 'topic', 'tags']
     summernote_fields = '__all__'
     list_editable = ['num_lesson']
 
@@ -52,11 +52,6 @@ class LessonAdmin(SummernoteModelAdmin):
 
     num_topic.short_description = 'Topic Number'
 
-
-# @admin.register(Notes)
-# class NotesAdmin(admin.ModelAdmin):
-#     list_display = ['author', 'user', 'date']
-#     list_filter = ['user']
 
 @admin.register(Notes)
 class NotesAdmin(admin.ModelAdmin):

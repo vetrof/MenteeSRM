@@ -9,6 +9,7 @@ from django.dispatch import receiver
 from django.urls import reverse
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
+from taggit.managers import TaggableManager
 
 
 class Course(models.Model):
@@ -49,6 +50,8 @@ class Lesson(models.Model):
     title = models.CharField(max_length=300)
     info = models.TextField(blank=True)
     info_hide = models.TextField(blank=True)
+    tags = TaggableManager()
+
 
     def __str__(self):
         return self.title
