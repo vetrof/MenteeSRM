@@ -158,13 +158,20 @@ AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
                            ]
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 # sendgreed setup
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = env('SENDGRID_API_KEY')
-EMAIL_PORT = 587
+# EMAIL_HOST = 'smtp.sendgrid.net'
+# EMAIL_HOST_USER = 'apikey'
+# EMAIL_HOST_PASSWORD = env('SENDGRID_API_KEY')
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+
+# mailru
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 2525
 EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'admin@django.help'
+EMAIL_HOST_PASSWORD = env('MAILRU_TOKEN_PASS')
 
 SUMMERNOTE_CONFIG = {
     'summernote': {

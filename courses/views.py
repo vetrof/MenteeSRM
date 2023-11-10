@@ -88,6 +88,24 @@ def edit_note(request, id):
 
 
 @login_required
+def delete_note(request, id, delete):
+    if request.user.is_superuser and delete == 'delete':
+        note = Notes.objects.get(id=id)
+        note.delete()
+        # Получаем сохраненный URL предыдущей страницы из сессии
+        prev_url = request.session.get('prev_url')
+
+        if prev_url:
+            # Перенаправляем пользователя на сохраненную предыдущую страницу
+            return redirect(prev_url)
+        else:
+            # Если URL не сохранен, перенаправляем пользователя на 'sticky_wall' по умолчанию
+            return redirect('sticky_wall')
+
+    return render(request, 'sticky_wall.html')
+
+
+@login_required
 def sticky_wall(request, user_id=None):
     if user_id and request.user.is_superuser:
         current_user = User.objects.get(id=user_id)
