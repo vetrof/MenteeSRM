@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.urls import reverse
 
+from cabinet.study_class import Study
 from courses.forms import NotesForm, QuestionForm
 from courses.models import Lesson, Notes
 
@@ -28,7 +29,21 @@ def contacts_page(request):
 
 
 def helpers_page(request):
-    return render(request, 'helpers.html')
+    course = 'Helpers'
+    mentee_id = None
+    study = Study(request)
+    all_current_mentee = study.mentee_List
+    list_for_user = study.list_for_user(mentee_id)
+    lessons_and_statuses = study.lessons_list(mentee_id, course)
+    progress = study.progress
+
+    return render(request, 'helpers.html', {
+        'course': course,
+        'all_current_mentee': all_current_mentee,
+        'list_for_user': list_for_user,
+        'lessons': lessons_and_statuses,
+        'progress': progress,
+    })
 
 
 @login_required

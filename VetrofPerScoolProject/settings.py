@@ -173,6 +173,7 @@ EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'admin@django.help'
 EMAIL_HOST_PASSWORD = env('MAILRU_TOKEN_PASS')
 
+# SUMMERNOTE_THEME = 'bs4'
 SUMMERNOTE_CONFIG = {
     'summernote': {
         # 'airMode': True,
