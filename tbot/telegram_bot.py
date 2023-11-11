@@ -37,6 +37,10 @@ def echo_all(message):
         bot.reply_to(message, answer)
 
 
+def send_message_for_users(users, text):
+    for user in users:
+        bot.send_message(user.profile.telegram_chatid, text)
+
 
 
 
