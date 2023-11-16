@@ -59,6 +59,10 @@ class Lesson(models.Model):
     def get_absolute_url(self):
         return reverse('lesson_detail', args=[str(self.id)])
 
+    def get_topic_url(self):
+        return reverse('course_cabinet', args=[str(self.topic.course.title), str(self.topic_id)])
+
+
 
 class LessonStatus(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)

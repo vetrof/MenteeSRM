@@ -7,20 +7,44 @@ from cabinet.study_class import Study
 from courses.models import Lesson, LessonStatus, Course
 
 
-def course_cabinet(request, mentee_id=None, course=None):
+def course_cabinet(request, mentee_id=None, course=None, topic=None):
 
+    if mentee_id == 0:
+        mentee_id = None
+        look_from_user = None
+        request.session['look_from_user'] = None
+
+    if mentee_id:
+        request.session['look_from_user'] = mentee_id
+        look_from_user = User.objects.get(id=mentee_id)
+    else:
+        look_from_user = None
+
+    try:
+        if request.session['look_from_user']:
+            mentee_id = request.session['look_from_user']
+            look_from_user = User.objects.get(id=mentee_id)
+            pass
+    except:
+        request.session['look_from_user'] = request.user.id
+
+
+
+    topic_id = topic
     study = Study(request)
     all_current_mentee = study.mentee_List
     list_for_user = study.list_for_user(mentee_id)
-    lessons_and_statuses = study.lessons_list(mentee_id, course)
+    lessons_and_statuses = study.lessons_list(mentee_id, course, topic_id)
     progress = study.progress
 
     return render(request, 'cabinet.html', {
         'course': course,
+        'topic': topic,
         'all_current_mentee': all_current_mentee,
         'list_for_user': list_for_user,
         'lessons': lessons_and_statuses,
         'progress': progress,
+        'look_from_user': look_from_user,
     })
 
 

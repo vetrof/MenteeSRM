@@ -29,8 +29,8 @@ urlpatterns = [
     path('summernote/', include('django_summernote.urls')),
     path('api/', include('api.urls')),
     path('tbot/', include('tbot.urls')),
+    path('tbot_maxim/', include('tbot_maxim.urls')),
     path('', include('courses.urls')),
-
 
 ]
 

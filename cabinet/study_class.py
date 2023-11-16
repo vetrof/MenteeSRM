@@ -22,7 +22,9 @@ class Study:
             list_for_user = mentee_id
         return list_for_user
 
-    def lessons_list(self, mentee_id, course):
+    def lessons_list(self, mentee_id, course, topic_id):
+
+
         if self.request.user.is_authenticated:
             if self.request.user.is_superuser:
 
@@ -46,6 +48,8 @@ class Study:
         else:
             self.lessons = Lesson.objects.filter(topic__course__title=course).order_by('topic__grade', 'topic__num_topic', 'num_lesson')
 
+        if topic_id:
+            self.lessons = self.lessons.filter(topic_id=topic_id)
 
         # add lessons in dict
         lessons_dict = []
@@ -56,6 +60,7 @@ class Study:
                 'topic': lesson.topic.title,
                 'title': lesson.title,
                 'get_absolute_url': lesson.get_absolute_url,
+                'get_topic_url': lesson.get_topic_url,
             }
             # add statuses in dict
             for status in self.lesson_statuses:

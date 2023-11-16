@@ -1,4 +1,3 @@
-
 from django.contrib import messages
 import requests
 from django.contrib.auth.decorators import login_required
@@ -34,7 +33,7 @@ def helpers_page(request):
     study = Study(request)
     all_current_mentee = study.mentee_List
     list_for_user = study.list_for_user(mentee_id)
-    lessons_and_statuses = study.lessons_list(mentee_id, course)
+    lessons_and_statuses = study.lessons_list(mentee_id, course, topic_id=None)
     progress = study.progress
 
     return render(request, 'helpers.html', {
@@ -69,7 +68,11 @@ def lesson_detail(request, id):
 
 @login_required
 def calendar(request):
-    return render(request, 'calendar.html')
+    user = request.user
+    if user.profile.current_mentee or user.is_superuser or user.is_staff:
+        return render(request, 'calendar.html')
+
+    return redirect('no_permissions')
 
 
 @login_required
@@ -122,6 +125,26 @@ def delete_note(request, id, delete):
 
 @login_required
 def sticky_wall(request, user_id=None):
+
+    if user_id == 0:
+        user_id = None
+        request.session['look_from_user'] = None
+        look_from_user = None
+    if user_id:
+        request.session['look_from_user'] = user_id
+        look_from_user = User.objects.get(id=user_id)
+    else:
+        look_from_user = None
+
+    try:
+        if request.session['look_from_user']:
+            user_id = request.session['look_from_user']
+            look_from_user = User.objects.get(id=user_id)
+            pass
+    except:
+        request.session['look_from_user'] = request.user.id
+        look_from_user = None
+
     if user_id and request.user.is_superuser:
         current_user = User.objects.get(id=user_id)
     else:
@@ -147,7 +170,9 @@ def sticky_wall(request, user_id=None):
         'notes': notes,
         'form': form,
         'current_user': current_user,
-        'users': users
+        'users': users,
+        'look_from_user': look_from_user,
+
     })
 
 

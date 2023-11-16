@@ -49,3 +49,4 @@ sendgrid.env
 
 temp.*
 .gitignore
+/tbot_maxim/
