@@ -27,7 +27,7 @@ class LessonAdmin(SummernoteModelAdmin):
     list_filter = ['topic__course', 'topic__grade', 'topic', 'tags']
     summernote_fields = '__all__'
     list_editable = ['num_lesson']
-    search_fields = ['topic_title']
+    search_fields = ['info', 'title', 'topic__title', 'topic__course__title']
 
     fieldsets = [
         ('Lesson Info', {

@@ -1,0 +1,12 @@
+FROM python:3.10
+
+ENV PIP_DISABLE_PIP_VERSION_CHECK 1
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
+
+WORKDIR /code
+
+COPY ./requiremets.txt .
+RUN pip install -r requiremets.txt
+
+COPY . .
