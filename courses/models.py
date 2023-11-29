@@ -20,6 +20,7 @@ class Course(models.Model):
         return self.title
 
 
+
 class Grade(models.Model):
     level = models.IntegerField()
     info = models.TextField(blank=True)

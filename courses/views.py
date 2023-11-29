@@ -45,11 +45,15 @@ def helpers_page(request):
     })
 
 
-@login_required
+# @login_required
 def lesson_detail(request, id):
     user_g1_status = True
-    user_g2_status = request.user.profile.g2
-    user_g3_status = request.user.profile.g3
+    if request.user.is_anonymous:
+        user_g2_status = False
+        user_g3_status = False
+    else:
+        user_g2_status = request.user.profile.g2
+        user_g3_status = request.user.profile.g3
     lesson = Lesson.objects.get(id=id)
     lesson_grade = lesson.topic.grade.level
 
@@ -63,7 +67,9 @@ def lesson_detail(request, id):
     else:
         return redirect('no_permissions')
 
-    return render(request, 'lesson_detail.html', {'lesson': lesson})
+    course = lesson.topic.course.title
+
+    return render(request, 'lesson_detail.html', {'lesson': lesson, "course": course})
 
 
 @login_required

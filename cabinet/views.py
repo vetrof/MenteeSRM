@@ -3,11 +3,13 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render
 from cabinet.study_class import Study
+import time
 
 from courses.models import Lesson, LessonStatus, Course
 
 
 def course_cabinet(request, mentee_id=None, course=None, topic=None):
+    start_time_without_index = time.time()
 
     if mentee_id == 0:
         mentee_id = None
@@ -28,14 +30,17 @@ def course_cabinet(request, mentee_id=None, course=None, topic=None):
     except:
         request.session['look_from_user'] = request.user.id
 
-
-
     topic_id = topic
     study = Study(request)
     all_current_mentee = study.mentee_List
     list_for_user = study.list_for_user(mentee_id)
     lessons_and_statuses = study.lessons_list(mentee_id, course, topic_id)
     progress = study.progress
+
+    # time process
+    end_time_without_index = time.time()
+    time_taken_without_index = end_time_without_index - start_time_without_index
+    print(f'Time taken without index: {time_taken_without_index} seconds')
 
     return render(request, 'cabinet.html', {
         'course': course,
