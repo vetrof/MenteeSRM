@@ -22,10 +22,15 @@ def telegram_webhook(request):
         bot.process_new_updates([update])
     return HttpResponse('<h1>Bot live!</h1>')
 
-
+# /START
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.send_message(message.chat.id, "Привет! Я ваш телеграм-бот. ")
+
+    if message.text.startswith('/start'):
+        # Обработка команды /start
+        unique_identifier = message.text.split('/start ')[1]
+    print(unique_identifier)
+    bot.send_message(message.chat.id, f"Привет {message.chat.first_name}! Я ваш телеграм-бот. ")
 
 
 @bot.message_handler(func=lambda message: True)
