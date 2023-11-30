@@ -2,8 +2,14 @@ import telebot
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+
+from accounts.models import Profile
 from courses.models import Question
 from django.contrib.auth.models import User
+
+from tbot.models import TelegramUser
+
+# TODO проверить логику добавления нового юзера по кнопке start
 
 bot = telebot.TeleBot(settings.TELEGRAM_TOKEN)
 
@@ -26,10 +32,39 @@ def telegram_webhook(request):
 @bot.message_handler(commands=['start'])
 def start(message):
 
-    if message.text.startswith('/start'):
-        # Обработка команды /start
-        unique_identifier = message.text.split('/start ')[1]
-    print(unique_identifier)
+    user_exists = TelegramUser.objects.filter(chat_id=message.chat.id).exists()
+
+    if message.text.endswith('_userid'):
+        user_id = message.text.split('/start ')[1]
+        user_id = user_id.split('_')[0]
+
+        default_username = "nope"
+        default_first_name = "nope"
+
+        try:
+            profile = Profile.objects.get(user__id=user_id)
+            profile.telegram_chatid = message.chat.id
+            profile.save()
+
+            telegram_user = TelegramUser(
+                chat_id=message.chat.id,
+                username=message.chat.username if message.chat.username else default_username,
+                first_name=message.chat.first_name if message.chat.first_name else default_first_name,
+                user_id=user_id
+            )
+            telegram_user.save()
+
+        except Profile.DoesNotExist:
+            pass
+
+    if not user_exists:
+        telegram_user = TelegramUser(
+            chat_id=message.chat.id,
+            username=message.chat.username if message.chat.username else default_username,
+            first_name=message.chat.first_name if message.chat.first_name else default_first_name,
+        )
+        telegram_user.save()
+
     bot.send_message(message.chat.id, f"Привет {message.chat.first_name}! Я ваш телеграм-бот. ")
 
 
