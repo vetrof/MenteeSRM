@@ -10,6 +10,8 @@ from cabinet.study_class import Study
 from courses.forms import NotesForm, QuestionForm
 from courses.models import Lesson, Notes
 
+# from gcal import g_calendar
+
 
 def index_page(request):
     if request.method == 'POST':
@@ -76,7 +78,9 @@ def lesson_detail(request, id):
 def calendar(request):
     user = request.user
     if user.profile.current_mentee or user.is_superuser or user.is_staff:
-        return render(request, 'calendar.html')
+        # event_list = g_calendar.main()
+        event_list = {}
+        return render(request, 'calendar.html', {'event_list': event_list})
 
     return redirect('no_permissions')
 

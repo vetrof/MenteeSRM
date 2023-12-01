@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "taggit",
     'tbot_maxim',
+    'gcal',
 ]
 
 MIDDLEWARE = [

@@ -14,7 +14,7 @@ def main():
     Prints the start and name of the next 10 events on the user's calendar.
     """
     creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
+    # The file token.json stores the user's access and refresh tokens and is
     # created automatically when the authorization flow completes for the first
     # time.
     if os.path.exists("token.json"):
@@ -60,10 +60,18 @@ def main():
             print("No upcoming events found.")
             return
 
-        # Prints the start and name of the next 10 events
+        # Create a list of dictionaries to store event details
+        events_list = []
+
+        # Append the start and summary of each event to the list
         for event in events:
             start = event["start"].get("dateTime", event["start"].get("date"))
-            print(start, event["summary"])
+            events_list.append({"start": start, "summary": event["summary"]})
+
+        # Print the list of event dictionaries
+        print(events_list)
+
+        return events_list
 
     except HttpError as error:
         print(f"An error occurred: {error}")
