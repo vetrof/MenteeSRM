@@ -9,16 +9,21 @@ django.setup()
 
 import time
 from tbot.models import TelegramUser
+from django.contrib.auth.models import User
 
 # Измерение времени выполнения запроса без индекса
 start_time_without_index = time.time()
 
-t_user = TelegramUser.objects.create(
-    chat_id=7,
-    username='vetrof',
-    first_name='votaly',
-    user_id=18,
-)
+try:
+    telegram_user = TelegramUser.objects.get(user_id=18)
+    chat_id = telegram_user.chat_id
+except TelegramUser.DoesNotExist:
+    chat_id = None
+except Exception as e:
+    print(f"Произошла ошибка: {e}")
+
+print(chat_id)
+
 
 end_time_without_index = time.time()
 time_taken_without_index = end_time_without_index - start_time_without_index

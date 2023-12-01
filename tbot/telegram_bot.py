@@ -28,42 +28,62 @@ def telegram_webhook(request):
         bot.process_new_updates([update])
     return HttpResponse('<h1>Bot live!</h1>')
 
+
 # /START
 @bot.message_handler(commands=['start'])
 def start(message):
+    chat_id = message.chat.id
+    username = message.chat.username if message.chat.username else 'nope',
+    first_name = message.chat.first_name if message.chat.first_name else 'nope'
+    tg_user_exist = TelegramUser.objects.filter(chat_id=chat_id).exists()
 
-    user_exists = TelegramUser.objects.filter(chat_id=message.chat.id).exists()
+    print(chat_id, username, first_name, tg_user_exist)
 
+    # user зареган на сайте
     if message.text.endswith('_userid'):
-        user_id = message.text.split('/start ')[1]
-        user_id = user_id.split('_')[0]
 
-        default_username = "nope"
-        default_first_name = "nope"
+        # его chat id  есть в базе
+        if tg_user_exist:
+            # у него есть user id
+            user_id_exists = TelegramUser.objects.get(chat_id=chat_id)
+            if user_id_exists.user_id:
+                pass
 
-        try:
-            profile = Profile.objects.get(user__id=user_id)
-            profile.telegram_chatid = message.chat.id
-            profile.save()
+            # у него нет user id
+            else:
+                # получаем id из message
+                all_text = message.text.split('/start ')[1]
+                user_id = all_text.split('_')[0]
+                # добавляем user id
+                tg_user = TelegramUser.objects.get(chat_id=chat_id)
+                tg_user.user_id = user_id
+                tg_user.save()
 
+        else:
+            # получаем id из message
+            all_text = message.text.split('/start ')[1]
+            user_id = all_text.split('_')[0]
+
+            # добавляем нового tg юзера
             telegram_user = TelegramUser(
-                chat_id=message.chat.id,
-                username=message.chat.username if message.chat.username else default_username,
-                first_name=message.chat.first_name if message.chat.first_name else default_first_name,
+                chat_id=chat_id,
+                username=username,
+                first_name=first_name,
                 user_id=user_id
             )
             telegram_user.save()
 
-        except Profile.DoesNotExist:
-            pass
+    # юзер не зареган на сайте
+    else:
+        try:
 
-    if not user_exists:
-        telegram_user = TelegramUser(
-            chat_id=message.chat.id,
-            username=message.chat.username if message.chat.username else default_username,
-            first_name=message.chat.first_name if message.chat.first_name else default_first_name,
-        )
-        telegram_user.save()
+            # добавляем нового tg юзера
+            new_tg_user = TelegramUser(chat_id=chat_id,
+                                       username=username,
+                                       first_name=first_name)
+            new_tg_user.save()
+        except:
+            ...
 
     bot.send_message(message.chat.id, f"Привет {message.chat.first_name}! Я ваш телеграм-бот. ")
 
@@ -82,7 +102,10 @@ def send_message_for_users(users, text):
         bot.send_message(user.profile.telegram_chatid, text)
 
 
-
+def spam_all_user(users, title, text):
+    message = f"*{title}*\n{text}"
+    for user in users:
+        bot.send_message(user.chat_id, message, parse_mode='Markdown')
 
 
 
