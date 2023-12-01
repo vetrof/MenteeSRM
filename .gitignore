@@ -50,3 +50,4 @@ sendgrid.env
 temp.*
 .gitignore
 /tbot_maxim/
+gcal/credentials.json

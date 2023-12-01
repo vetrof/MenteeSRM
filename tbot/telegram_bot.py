@@ -2,6 +2,7 @@ import telebot
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from telebot import types
 
 from accounts.models import Profile
 from courses.models import Question
@@ -85,16 +86,26 @@ def start(message):
         except:
             ...
 
-    bot.send_message(message.chat.id, f"Привет {message.chat.first_name}! Я ваш телеграм-бот. ")
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    item1 = types.KeyboardButton("Сайт крыши")
+    item2 = types.KeyboardButton("Не нажимать!")
+    item3 = types.KeyboardButton("Квартиры")
+    item4 = types.KeyboardButton("/start")
+    markup.row(item4, item1)
+    markup.row(item4, item1)
+
+    bot.send_message(message.chat.id,
+                     f"Привет {message.chat.first_name}! Я ваш телеграм-бот. ",
+                     reply_markup=markup)
 
 
-@bot.message_handler(func=lambda message: True)
-def echo_all(message):
-
-    answers = Question.objects.all()
-    for answer in answers:
-        answer = f' {answer.date} // {answer.client_info} // {answer.text}'
-        bot.reply_to(message, answer)
+# @bot.message_handler(func=lambda message: True)
+# def echo_all(message):
+#
+#     answers = Question.objects.all()
+#     for answer in answers:
+#         answer = f' {answer.date} // {answer.client_info} // {answer.text}'
+#         bot.reply_to(message, answer)
 
 
 def send_message_for_users(users, text):
