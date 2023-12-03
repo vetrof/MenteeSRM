@@ -19,7 +19,8 @@ def set_webhook(request):
     webhook_address = settings.TELEGRAM_BOT_WEBHOOK_URL
     bot.remove_webhook()
     bot.set_webhook(webhook_address)
-    return HttpResponse(f'<h1>set_webhook---> {settings.TELEGRAM_BOT_WEBHOOK_URL}</h1>')
+    return HttpResponse(
+        f'<h1>set_webhook---> {settings.TELEGRAM_BOT_WEBHOOK_URL}</h1>')
 
 
 @csrf_exempt
@@ -33,6 +34,7 @@ def telegram_webhook(request):
 # /START
 @bot.message_handler(commands=['start'])
 def start(message):
+    text = ""
     chat_id = message.chat.id
     username = message.chat.username if message.chat.username else 'nope',
     first_name = message.chat.first_name if message.chat.first_name else 'nope'
@@ -73,6 +75,7 @@ def start(message):
                 user_id=user_id
             )
             telegram_user.save()
+        # text = f"Привет {message.chat.first_name}! Я Django.Help бот."
 
     # юзер не зареган на сайте
     else:
@@ -83,20 +86,29 @@ def start(message):
                                        username=username,
                                        first_name=first_name)
             new_tg_user.save()
+
         except:
             ...
 
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    item1 = types.KeyboardButton("Сайт крыши")
-    item2 = types.KeyboardButton("Не нажимать!")
-    item3 = types.KeyboardButton("Квартиры")
-    item4 = types.KeyboardButton("/start")
-    markup.row(item4, item1)
-    markup.row(item4, item1)
+    try:
+        user_id = TelegramUser.objects.get(chat_id=chat_id).user_id
+        text = f"Привет {message.chat.first_name}! Я Django.Help бот. Ваши аакунт на сайте и телеграм аккаунт успешно связаны."
+    except:
+        text = (f"Привет {message.chat.first_name}! Я Django.Help бот.\nВаш chat_id занесен в базу.\nЧтоб свзязать аккаунт на сайте и ваш телеграм,"
+                f" залогинтесь на сайте: \nhttps://django.help/ \nи перейдите по этой ссылке: \nhttps://django.help/tbot/tbot_personal_link/ \nи еще раз активируйте бота")
+
+    # markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    # item1 = types.KeyboardButton("Сайт крыши")
+    # item2 = types.KeyboardButton("Не нажимать!")
+    # item3 = types.KeyboardButton("Квартиры")
+    # item4 = types.KeyboardButton("/start")
+    # markup.row(item4, item1)
+    # markup.row(item4, item1)
 
     bot.send_message(message.chat.id,
-                     f"Привет {message.chat.first_name}! Я ваш телеграм-бот. ",
-                     reply_markup=markup)
+                     text,
+                     # reply_markup=markup
+                     )
 
 
 # @bot.message_handler(func=lambda message: True)
@@ -119,6 +131,6 @@ def spam_all_user(users, title, text):
         bot.send_message(user.chat_id, message, parse_mode='Markdown')
 
 
-
-
-
+def send_massage_to_user(chat_id, title, text):
+    message = f"\n*{title}*\n{text}"
+    bot.send_message(chat_id, message, parse_mode='Markdown')
