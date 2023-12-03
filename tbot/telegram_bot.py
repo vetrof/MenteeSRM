@@ -92,10 +92,16 @@ def start(message):
 
     try:
         user_id = TelegramUser.objects.get(chat_id=chat_id).user_id
-        text = f"Привет {message.chat.first_name}! Я Django.Help бот. Ваши аакунт на сайте и телеграм аккаунт успешно связаны."
+        text = (f"Привет {message.chat.first_name}! Я Django.Help бот. "
+                f"Ваш аккаунт на сайте и телеграм успешно связаны.")
     except:
-        text = (f"Привет {message.chat.first_name}! Я Django.Help бот.\nВаш chat_id занесен в базу.\nЧтоб свзязать аккаунт на сайте и ваш телеграм,"
-                f" залогинтесь на сайте: \nhttps://django.help/ \nи перейдите по этой ссылке: \nhttps://django.help/tbot/tbot_personal_link/ \nи еще раз активируйте бота")
+        text = (f"Привет {message.chat.first_name}! Я Django.Help бот."
+                f"\nВаш chat_id занесен в базу.\n"
+                f"Чтоб свзязать аккаунт на сайте и ваш телеграм,"
+                f" залогинтесь на сайте: \nhttps://django.help/ "
+                f"\nи перейдите по этой ссылке: "
+                f"\nhttps://django.help/tbot/tbot_personal_link/ "
+                f"\nи еще раз активируйте бота")
 
     # markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     # item1 = types.KeyboardButton("Сайт крыши")
