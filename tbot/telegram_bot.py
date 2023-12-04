@@ -11,6 +11,8 @@ from django.contrib.auth.models import User
 
 from tbot.models import TelegramUser
 
+from gcal import g_calendar
+
 # TODO проверить логику добавления нового юзера по кнопке start
 
 bot = telebot.TeleBot(settings.TELEGRAM_TOKEN)
@@ -109,7 +111,9 @@ def start(message):
     item1 = types.KeyboardButton("Что я умею")
     item2 = types.KeyboardButton("Django.Help")
     item3 = types.KeyboardButton("Статус")
+    item4 = types.KeyboardButton("Расписание")
     markup.row(item1, item2, item3)
+    markup.row(item4)
 
     bot.send_message(message.chat.id,
                      text,
@@ -176,12 +180,50 @@ def start(message):
               f"user_id = {user_id}\n"
               f"username = {username_site}\n"
               f"{link_instructions}\n"
+              f"Обновить меню: /start\n"
               )
 
 
     bot.send_message(message.chat.id,
                      answer,
                      )
+
+
+# /Расписание
+@bot.message_handler(func=lambda message: message.text == "Расписание")
+def start(message):
+
+    user_id_telegram = message.chat.id
+    telegram_user = TelegramUser.objects.get(chat_id=user_id_telegram)
+    username = telegram_user.user.username
+    superuser = telegram_user.user.is_superuser
+    events_list = g_calendar.main()
+    answer = ''
+
+    for i in events_list:
+        if superuser:
+            start_time = i['start']['dateTime']
+            timezone = i['start']['timeZone']
+            summary = i['summary']
+            answer += (
+                f'{start_time[:-15]} {start_time[11:-9]} (msk) {summary}\n'
+            )
+        else:
+            if username == i['summary']:
+                start_time = i['start']['dateTime']
+                timezone = i['start']['timeZone']
+                summary = i['summary']
+                answer += (
+                    f'{start_time[:-15]} {start_time[11:-9]} (msk) \n'
+                  )
+
+    if answer == '':
+        bot.send_message(message.chat.id,
+                         'У вас нет занятий в ближайшие 7 дней:')
+    else:
+        bot.send_message(message.chat.id,
+                         f'Ваши занятия в ближайшие 7 дней:\n {answer}',
+                         parse_mode='Markdown')
 
 
 def send_message_for_users(users, text):

@@ -32,6 +32,7 @@ def main():
         with open("token.json", "w") as token:
             token.write(creds.to_json())
 
+
     try:
         service = build("calendar", "v3", credentials=creds)
 
@@ -65,12 +66,11 @@ def main():
 
         # Append the start and summary of each event to the list
         for event in events:
-            start = event["start"].get("dateTime", event["start"].get("date"))
+            # start = event["start"].get("dateTime", event["start"].get("date"))
+            start = event["start"]
             events_list.append({"start": start, "summary": event["summary"]})
 
-        # Print the list of event dictionaries
-        print(events_list)
-
+        # print(events_list)
         return events_list
 
     except HttpError as error:
