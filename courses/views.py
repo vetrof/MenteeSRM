@@ -78,8 +78,8 @@ def lesson_detail(request, id):
 def calendar(request):
     user = request.user
     if user.profile.current_mentee or user.is_superuser or user.is_staff:
-        # event_list = g_calendar.main()
         event_list = {}
+        # event_list = g_calendar.main()
         return render(request, 'calendar.html', {'event_list': event_list})
 
     return redirect('no_permissions')
