@@ -235,17 +235,24 @@ def start(message):
                          parse_mode='Markdown')
 
 
-def send_message_for_users(users, text):
-    for user in users:
-        bot.send_message(user.profile.telegram_chatid, text)
+class TelegramSender:
+
+    def send_message_for_users(users, text):
+        for user in users:
+            bot.send_message(user.profile.telegram_chatid,
+                             text)
+
+    def spam_all_user(users, title, text):
+        message = f"*{title}*\n{text}"
+        for user in users:
+            bot.send_message(user.chat_id,
+                             message,
+                             parse_mode='Markdown')
+
+    def send_massage_to_user(chat_id, title, text):
+        message = f"\n*{title}*\n{text}"
+        bot.send_message(chat_id, message, parse_mode='Markdown')
 
 
-def spam_all_user(users, title, text):
-    message = f"*{title}*\n{text}"
-    for user in users:
-        bot.send_message(user.chat_id, message, parse_mode='Markdown')
 
 
-def send_massage_to_user(chat_id, title, text):
-    message = f"\n*{title}*\n{text}"
-    bot.send_message(chat_id, message, parse_mode='Markdown')
