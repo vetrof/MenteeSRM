@@ -13,8 +13,6 @@ from tbot.models import TelegramUser
 
 from gcal import g_calendar
 
-# TODO проверить логику добавления нового юзера по кнопке start
-
 bot = telebot.TeleBot(settings.TELEGRAM_TOKEN)
 
 
@@ -108,12 +106,13 @@ def start(message):
 
     # menu
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    item1 = types.KeyboardButton("Что я умею")
+    item1 = types.KeyboardButton("Info")
     item2 = types.KeyboardButton("Django.Help")
     item3 = types.KeyboardButton("Статус")
-    item4 = types.KeyboardButton("Расписание")
-    markup.row(item1, item2, item3)
-    markup.row(item4)
+    item4 = types.KeyboardButton("Чат с ментором")
+    item5 = types.KeyboardButton("Расписание")
+    markup.row(item1, item3)
+    markup.row(item4, item5)
 
     bot.send_message(message.chat.id,
                      text,
@@ -121,14 +120,17 @@ def start(message):
                      )
 
 
-# /Что я умею
-@bot.message_handler(func=lambda message: message.text == "Что я умею")
+# /Info
+@bot.message_handler(func=lambda message: message.text == "Info")
 def start(message):
     bot.send_message(message.chat.id,
+                     "- Бот сайта: [Django.Help](https://django.help/)\n"
                      "- Уведомляю о новых записках\n"
                      "- Показываю статус бота\n"
-                    "- Дата ближайшего урока (скоро)\n"
-                    "- Помогаю связать чат и ваш аккаунт\n", parse_mode='Markdown'
+                     "- Дата ближайшего урока \n"
+                     "- Помогаю связать чат и ваш аккаунт\n"
+                     "- Обновить меню: /start\n",
+                     parse_mode='Markdown'
                      )
 
 
@@ -144,7 +146,6 @@ def start(message):
 # /Статус
 @bot.message_handler(func=lambda message: message.text == "Статус")
 def start(message):
-
     user_id_telegram = message.chat.id
     username_telegram = message.chat.username
     first_name_telegram = message.chat.first_name
@@ -160,14 +161,15 @@ def start(message):
     link_status = 'True' if user_id else 'False'
 
     if not user_id:
-        link_instructions = (f"\nЧтоб связать аккаунт на сайте и ваш телеграм:\n"
-                            f"\nзалогинтесь на сайте: "
-                            f"\nhttps://django.help\n"
-                            f"\nперейдите в настройки аккаунта: "
-                            f"\nhttps://django.help/account\n"
-                            f"\nперейдите по ссылке 'Подключить телеграм бот': "
-                            f"\nhttps://django.help/tbot/tbot_personal_link\n"
-                            f"\nи еще раз активируйте бота")
+        link_instructions = (
+            f"\nЧтоб связать аккаунт на сайте и ваш телеграм:\n"
+            f"\nзалогинтесь на сайте: "
+            f"\nhttps://django.help\n"
+            f"\nперейдите в настройки аккаунта: "
+            f"\nhttps://django.help/account\n"
+            f"\nперейдите по ссылке 'Подключить телеграм бот': "
+            f"\nhttps://django.help/tbot/tbot_personal_link\n"
+            f"\nи еще раз активируйте бота")
     else:
         link_instructions = ''
 
@@ -180,19 +182,26 @@ def start(message):
               f"user_id = {user_id}\n"
               f"username = {username_site}\n"
               f"{link_instructions}\n"
-              f"Обновить меню: /start\n"
-              )
 
+              )
 
     bot.send_message(message.chat.id,
                      answer,
                      )
 
 
+# /Чат с ментором
+@bot.message_handler(func=lambda message: message.text == "Чат с ментором")
+def start(message):
+    chat_link = 'https://t.me/VitalyLip'
+    bot.send_message(message.chat.id,
+                     chat_link,
+                     )
+
+
 # /Расписание
 @bot.message_handler(func=lambda message: message.text == "Расписание")
 def start(message):
-
     user_id_telegram = message.chat.id
     telegram_user = TelegramUser.objects.get(chat_id=user_id_telegram)
     username = telegram_user.user.username
@@ -215,7 +224,7 @@ def start(message):
                 summary = i['summary']
                 answer += (
                     f'{start_time[:-15]} {start_time[11:-9]} (msk) \n'
-                  )
+                )
 
     if answer == '':
         bot.send_message(message.chat.id,
