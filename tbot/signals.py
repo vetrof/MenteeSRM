@@ -11,7 +11,8 @@ def question_to_telegram(sender, instance, created, **kwargs):
     if created:
         users = User.objects.filter(is_superuser=True)
         client_info = instance.client_info
-        TelegramSender.send_message_for_users(users, client_info)
+        sender = TelegramSender()
+        sender.send_message_for_users(users, client_info)
 
 
 @receiver(post_save, sender=TgSpam)
@@ -20,4 +21,5 @@ def spam_all_tg_user(sender, instance, created, **kwargs):
         users = TelegramUser.objects.all()
         title = instance.title
         text = instance.message
-        TelegramSender.spam_all_user(users, title, text)
+        sender = TelegramSender()
+        sender.spam_all_user(users, title, text)

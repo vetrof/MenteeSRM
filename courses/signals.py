@@ -12,7 +12,8 @@ def new_note_to_telegram(instance, created, **kwargs):
             user = instance.user
             text = 'У вас новая записка на стене \nhttps://django.help/sticky'
             chat_id = TelegramUser.objects.get(user=user).chat_id
-            TelegramSender.send_massage_to_user(chat_id,
+            sender = TelegramSender()
+            sender.send_message_to_user(chat_id,
                                  f'Привет {user.username}! ',
                                  text)
         except:

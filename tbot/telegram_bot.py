@@ -1,17 +1,13 @@
+# TODO написать установку хука с помощью терминальной команды
+
 import telebot
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from telebot import types
 
-from accounts.models import Profile
-from cabinet.study_class import Study
-from courses.models import Question
-from django.contrib.auth.models import User
-
-from tbot.models import TelegramUser
-
 from gcal import g_calendar
+from tbot.models import TelegramUser
 
 bot = telebot.TeleBot(settings.TELEGRAM_TOKEN)
 
@@ -236,23 +232,18 @@ def start(message):
 
 
 class TelegramSender:
+    def __init__(self):
+        self.bot = bot
 
-    def send_message_for_users(users, text):
+    def send_message_for_users(self, users, text):
         for user in users:
-            bot.send_message(user.profile.telegram_chatid,
-                             text)
+            self.bot.send_message(user.profile.telegram_chatid, text)
 
-    def spam_all_user(users, title, text):
+    def spam_all_user(self, users, title, text):
         message = f"*{title}*\n{text}"
         for user in users:
-            bot.send_message(user.chat_id,
-                             message,
-                             parse_mode='Markdown')
+            self.bot.send_message(user.chat_id, message, parse_mode='Markdown')
 
-    def send_massage_to_user(chat_id, title, text):
+    def send_message_to_user(self, chat_id, title, text):
         message = f"\n*{title}*\n{text}"
-        bot.send_message(chat_id, message, parse_mode='Markdown')
-
-
-
-
+        self.bot.send_message(chat_id, message, parse_mode='Markdown')
