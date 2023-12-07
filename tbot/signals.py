@@ -2,8 +2,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from courses.models import Question
 from tbot.models import TgSpam, TelegramUser
-# from tbot.telegram_bot import TelegramSender
-from tbot.TelegramSender import TelegramSender
+from tbot.telegram_bot import TelegramSender
 from django.contrib.auth.models import User
 
 

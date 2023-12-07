@@ -8,8 +8,12 @@ from telebot import types
 
 from gcal import g_calendar
 from tbot.models import TelegramUser
+from tbot.TelebotTelegram import Telegram
 
-bot = telebot.TeleBot(settings.TELEGRAM_TOKEN)
+bot = Telegram(settings.TELEGRAM_TOKEN)
+
+
+bot.listSender([180958616], 'test')
 
 
 def set_webhook(request):
