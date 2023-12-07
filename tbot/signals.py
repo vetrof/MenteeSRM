@@ -1,25 +1,41 @@
 from django.dispatch import receiver
 from django.db.models.signals import post_save
-from courses.models import Question
+from courses.models import Question, Notes
 from tbot.models import TgSpam, TelegramUser
-from tbot.telegram_bot import TelegramSender
 from django.contrib.auth.models import User
+from tbot.telegram_bot import bot
 
 
 @receiver(post_save, sender=Question)
-def question_to_telegram(sender, instance, created, **kwargs):
+def question(sender, instance, created, **kwargs):
     if created:
         users = User.objects.filter(is_superuser=True)
+        id_list = []
+        for user in users:
+            tg_user = TelegramUser.objects.get(user_id=user.id)
+            id_list.append(tg_user.chat_id)
         client_info = instance.client_info
-        telegram = TelegramSender()
-        telegram.send_message(users, client_info)
+        bot.listSender(id_list, client_info)
 
 
 @receiver(post_save, sender=TgSpam)
 def spam_all_tg_user(sender, instance, created, **kwargs):
     if instance.all_tg_user:
-        users = TelegramUser.objects.all()
-        title = instance.title
-        text = instance.message
-        sender = TelegramSender()
-        sender.spam_all_user(users, title, text)
+        tg_users = TelegramUser.objects.all()
+        id_list = []
+        for tg_user in tg_users:
+            id_list.append(tg_user.chat_id)
+        text = f'{instance.title}\n{instance.message}'
+        bot.listSender(id_list, text)
+
+
+@receiver(signal=post_save, sender=Notes)
+def new_note(instance, created, **kwargs):
+    if created:
+        try:
+            user = instance.user
+            text = 'У вас новая записка на стене \nhttps://django.help/sticky'
+            chat_id = TelegramUser.objects.get(user=user).chat_id
+            bot.listSender([chat_id], text)
+        except:
+            pass

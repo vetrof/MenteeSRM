@@ -13,9 +13,6 @@ from tbot.TelebotTelegram import Telegram
 bot = Telegram(settings.TELEGRAM_TOKEN)
 
 
-bot.listSender([180958616], 'test')
-
-
 def set_webhook(request):
     webhook_address = settings.TELEGRAM_BOT_WEBHOOK_URL
     bot.remove_webhook()
@@ -41,14 +38,11 @@ def start(message):
     first_name = message.chat.first_name if message.chat.first_name else 'nope'
     tg_user_exist = TelegramUser.objects.filter(chat_id=chat_id).exists()
 
-    print(chat_id, username, first_name, tg_user_exist)
-
-    # user зареган на сайте
+    # если юзер пришел по ссылке с user_id
     if message.text.endswith('_userid'):
-
         # его chat id  есть в базе
         if tg_user_exist:
-            # у него есть user id
+            # есть ли у него user id - ничего не делаем
             user_id_exists = TelegramUser.objects.get(chat_id=chat_id)
             if user_id_exists.user_id:
                 pass
@@ -76,18 +70,15 @@ def start(message):
                 user_id=user_id
             )
             telegram_user.save()
-        # text = f"Привет {message.chat.first_name}! Я Django.Help бот."
 
-    # юзер не зареган на сайте
+    # если юзер пришел по ссылке БЕЗ user_id
     else:
         try:
-
             # добавляем нового tg юзера
             new_tg_user = TelegramUser(chat_id=chat_id,
                                        username=username,
                                        first_name=first_name)
             new_tg_user.save()
-
         except:
             ...
 
@@ -234,22 +225,3 @@ def start(message):
                          f'Ваши занятия в ближайшие 7 дней:\n {answer}',
                          parse_mode='Markdown')
 
-
-
-class TelegramSender:
-    def __init__(self):
-        self.bot = bot
-
-
-    def send_message_for_users(self, users, text):
-        for user in users:
-            self.bot.send_message(user.profile.telegram_chatid, text)
-
-    def spam_all_user(self, users, title, text):
-        message = f"*{title}*\n{text}"
-        for user in users:
-            self.bot.send_message(user.chat_id, message, parse_mode='Markdown')
-
-    def send_message_to_user(self, chat_id, title, text):
-        message = f"\n*{title}*\n{text}"
-        self.bot.send_message(chat_id, message, parse_mode='Markdown')
