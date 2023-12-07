@@ -32,61 +32,46 @@ def telegram_webhook(request):
 # /START
 @bot.message_handler(commands=['start'])
 def start(message):
-    text = ""
     chat_id = message.chat.id
     username = message.chat.username if message.chat.username else 'nope',
     first_name = message.chat.first_name if message.chat.first_name else 'nope'
     tg_user_exist = TelegramUser.objects.filter(chat_id=chat_id).exists()
 
-    # если юзер пришел по ссылке с user_id
-    if message.text.endswith('_userid'):
-        # его chat id  есть в базе
-        if tg_user_exist:
-            # есть ли у него user id - ничего не делаем
-            user_id_exists = TelegramUser.objects.get(chat_id=chat_id)
-            if user_id_exists.user_id:
-                pass
-
-            # у него нет user id
-            else:
-                # получаем id из message
-                all_text = message.text.split('/start ')[1]
-                user_id = all_text.split('_')[0]
-                # добавляем user id
-                tg_user = TelegramUser.objects.get(chat_id=chat_id)
-                tg_user.user_id = user_id
-                tg_user.save()
-
-        else:
-            # получаем id из message
-            all_text = message.text.split('/start ')[1]
-            user_id = all_text.split('_')[0]
-
-            # добавляем нового tg юзера
-            telegram_user = TelegramUser(
-                chat_id=chat_id,
-                username=username,
-                first_name=first_name,
-                user_id=user_id
-            )
-            telegram_user.save()
-
-    # если юзер пришел по ссылке БЕЗ user_id
+    # get tg_user
+    if tg_user_exist:
+        tg_user = TelegramUser.objects.get(chat_id=chat_id)
+        user_id = tg_user.user_id
     else:
-        try:
-            # добавляем нового tg юзера
-            new_tg_user = TelegramUser(chat_id=chat_id,
-                                       username=username,
-                                       first_name=first_name)
-            new_tg_user.save()
-        except:
-            ...
+        tg_user = False
+        user_id = False
 
+    # get incoming_user_id
     try:
-        user_id = TelegramUser.objects.get(chat_id=chat_id).user_id
-        text = (f"Привет {message.chat.first_name}! Я Django.Help бот. "
-                f"Ваш аккаунт на сайте и телеграм успешно связаны.")
+        incoming_user_id = message.text.split()[1]
     except:
+        incoming_user_id = None
+
+    if tg_user:
+        if not user_id and incoming_user_id:
+                tg_user.user_id = incoming_user_id
+                tg_user.save()
+                user_id = True
+
+    else:
+        print('you a here')
+        telegram_user = TelegramUser(
+            chat_id=chat_id,
+            username=username,
+            first_name=first_name,
+            user_id=incoming_user_id)
+        telegram_user.save()
+
+    # messages
+    if user_id:
+        text = (
+            f"Привет {message.chat.first_name} ! Я Django.Help бот. "
+            f"Ваш аккаунт на сайте и телеграм успешно связаны.")
+    else:
         text = (f"Привет {message.chat.first_name}! Я Django.Help бот."
                 f"\nВаш chat_id занесен в базу.\n"
                 f"Чтоб связать аккаунт на сайте и ваш телеграм,"
@@ -95,10 +80,10 @@ def start(message):
                 f"\nhttps://django.help/tbot/tbot_personal_link/ "
                 f"\nи еще раз активируйте бота")
 
+
     # menu
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = types.KeyboardButton("Info")
-    item2 = types.KeyboardButton("Django.Help")
     item3 = types.KeyboardButton("Статус")
     item4 = types.KeyboardButton("Чат с ментором")
     item5 = types.KeyboardButton("Расписание")
@@ -107,8 +92,7 @@ def start(message):
 
     bot.send_message(message.chat.id,
                      text,
-                     reply_markup=markup
-                     )
+                     reply_markup=markup)
 
 
 # /Info

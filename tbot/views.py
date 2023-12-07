@@ -11,6 +11,6 @@ def telegram(request):
 
 def tbot_personal_link(request):
     if request.user.is_authenticated:
-        tbot_link = f"{settings.TELEGRAM_LINK}?start={request.user.id}_userid"
+        tbot_link = f"{settings.TELEGRAM_LINK}?start={request.user.id}"
         return redirect(tbot_link)
     return redirect(settings.TELEGRAM_LINK)
