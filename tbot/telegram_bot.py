@@ -231,9 +231,11 @@ def start(message):
                          parse_mode='Markdown')
 
 
+
 class TelegramSender:
     def __init__(self):
         self.bot = bot
+
 
     def send_message_for_users(self, users, text):
         for user in users:

@@ -2,7 +2,8 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from courses.models import Question
 from tbot.models import TgSpam, TelegramUser
-from tbot.telegram_bot import TelegramSender
+# from tbot.telegram_bot import TelegramSender
+from tbot.TelegramSender import TelegramSender
 from django.contrib.auth.models import User
 
 
@@ -11,8 +12,8 @@ def question_to_telegram(sender, instance, created, **kwargs):
     if created:
         users = User.objects.filter(is_superuser=True)
         client_info = instance.client_info
-        sender = TelegramSender()
-        sender.send_message_for_users(users, client_info)
+        telegram = TelegramSender()
+        telegram.send_message(users, client_info)
 
 
 @receiver(post_save, sender=TgSpam)

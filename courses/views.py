@@ -53,9 +53,11 @@ def lesson_detail(request, id):
     if request.user.is_anonymous:
         user_g2_status = False
         user_g3_status = False
+        user_g0_status = False
     else:
         user_g2_status = request.user.profile.g2
         user_g3_status = request.user.profile.g3
+        user_g0_status = True
     lesson = Lesson.objects.get(id=id)
     lesson_grade = lesson.topic.grade.level
 
@@ -65,6 +67,8 @@ def lesson_detail(request, id):
     elif lesson_grade == 2 and user_g2_status:
         pass
     elif lesson_grade == 1 and user_g1_status:
+        pass
+    elif lesson_grade == 0 and user_g0_status:
         pass
     else:
         return redirect('no_permissions')
