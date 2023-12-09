@@ -31,6 +31,22 @@ def spam_all_tg_user(sender, instance, created, **kwargs):
 
 @receiver(signal=post_save, sender=Notes)
 def new_note(instance, created, **kwargs):
+
+    # TODO сделать отложенную отправку сообщения на 10 минут
+    # https: // django - q.readthedocs.io / en / latest / examples.html
+    # пример отложенного письма
+    # from django_q.tasks import async_task, schedule
+    # from django_q.models import Schedule
+    # schedule('django.core.mail.send_mail',
+    #          'Follow up',
+    #          msg,
+    #          'from@example.com',
+    #          ['recipient@example.com'],
+    #          schedule_type=Schedule.ONCE,
+    #          next_run=timezone.now() + timedelta(seconds=10))
+
+    # TODO Добавить в сообщение текст заметки
+
     if created:
         try:
             user = instance.user
