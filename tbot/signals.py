@@ -44,25 +44,30 @@ def new_note(instance, created, **kwargs):
             user = instance.user
             text = 'У вас новая записка на стене \nhttps://django.help/sticky'
             chat_id = TelegramUser.objects.get(user=user).chat_id
-            bot.listSender([chat_id], text)
+            # bot.listSender([chat_id], text)
+            # async_task(
+            #         'tbot.telegram_bot.bot.listSender',
+            #         [chat_id],
+            #         text,
+            #     )
 
-            # if instance.user == instance.author:
-            #     async_task(
-            #         'tbot.telegram_bot.bot.listSender',
-            #         [chat_id],
-            #         text,
-            #         hook='tbot.signals.print_result'
-            #     )
-            #
-            # else:
-            #     schedule(
-            #         'tbot.telegram_bot.bot.listSender',
-            #         [chat_id],
-            #         text,
-            #         schedule_type=Schedule.ONCE,
-            #         next_run=timezone.now() + timedelta(minutes=5),
-            #         hook='tbot.signals.print_result'
-            #     )
+            if instance.user == instance.author:
+                async_task(
+                    'tbot.telegram_bot.bot.listSender',
+                    [chat_id],
+                    text,
+                    hook='tbot.signals.print_result'
+                )
+
+            else:
+                schedule(
+                    'tbot.telegram_bot.bot.listSender',
+                    [chat_id],
+                    text,
+                    schedule_type=Schedule.ONCE,
+                    next_run=timezone.now() + timedelta(minutes=5),
+                    hook='tbot.signals.print_result'
+                )
 
         except:
             pass
