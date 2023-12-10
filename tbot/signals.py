@@ -4,6 +4,10 @@ from courses.models import Question, Notes
 from tbot.models import TgSpam, TelegramUser
 from django.contrib.auth.models import User
 from tbot.telegram_bot import bot
+from django_q.tasks import async_task, schedule
+from django_q.models import Schedule
+from datetime import timedelta
+from django.utils import timezone
 
 
 @receiver(post_save, sender=Question)
@@ -32,20 +36,8 @@ def spam_all_tg_user(sender, instance, created, **kwargs):
 @receiver(signal=post_save, sender=Notes)
 def new_note(instance, created, **kwargs):
 
-    # TODO сделать отложенную отправку сообщения на 10 минут
-    # https: // django - q.readthedocs.io / en / latest / examples.html
-    # пример отложенного письма
-    # from django_q.tasks import async_task, schedule
-    # from django_q.models import Schedule
-    # schedule('django.core.mail.send_mail',
-    #          'Follow up',
-    #          msg,
-    #          'from@example.com',
-    #          ['recipient@example.com'],
-    #          schedule_type=Schedule.ONCE,
-    #          next_run=timezone.now() + timedelta(seconds=10))
-
     # TODO Добавить в сообщение текст заметки
+    # TODO c djangoQ на продакшене проблемы
 
     if created:
         try:
@@ -53,5 +45,28 @@ def new_note(instance, created, **kwargs):
             text = 'У вас новая записка на стене \nhttps://django.help/sticky'
             chat_id = TelegramUser.objects.get(user=user).chat_id
             bot.listSender([chat_id], text)
+
+            # if instance.user == instance.author:
+            #     async_task(
+            #         'tbot.telegram_bot.bot.listSender',
+            #         [chat_id],
+            #         text,
+            #         hook='tbot.signals.print_result'
+            #     )
+            #
+            # else:
+            #     schedule(
+            #         'tbot.telegram_bot.bot.listSender',
+            #         [chat_id],
+            #         text,
+            #         schedule_type=Schedule.ONCE,
+            #         next_run=timezone.now() + timedelta(minutes=5),
+            #         hook='tbot.signals.print_result'
+            #     )
+
         except:
             pass
+
+
+def print_result(task):
+    print(f'************--hook=main.signals.print_result = {task.result}')
