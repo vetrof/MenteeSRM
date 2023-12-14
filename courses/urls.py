@@ -1,6 +1,8 @@
 from django.urls import path, include
-from courses.views import (index_page, contacts_page, helpers_page, lesson_detail, calendar, sticky_wall,
-                           edit_note, delete_note, lesson_detail_notion, no_permissions)
+from courses.views import (index_page, contacts_page, helpers_page,
+                           lesson_detail, calendar, sticky_wall,
+                           edit_note, delete_note, lesson_detail_notion,
+                           no_permissions, about_django, about_python)
 
 # index/...
 urlpatterns = [
@@ -18,5 +20,9 @@ urlpatterns = [
     path('no_permissions/', no_permissions, name='no_permissions'),
 
     path('', index_page, name='index'),
+
+    # landing pages
+    path('about_django/', about_django, name='about_django'),
+    path('about_python/', about_python, name='about_python'),
 
 ]

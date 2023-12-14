@@ -9,6 +9,7 @@ from telebot import types
 from gcal import g_calendar
 from tbot.models import TelegramUser
 from tbot.TelebotTelegram import Telegram
+from django.urls import reverse
 
 bot = Telegram(settings.TELEGRAM_TOKEN)
 
@@ -87,6 +88,7 @@ def start(message):
     item3 = types.KeyboardButton("Статус")
     item4 = types.KeyboardButton("Чат с ментором")
     item5 = types.KeyboardButton("Расписание")
+    # item6 = types.KeyboardButton("Отправить координаты", request_location=True)
     markup.row(item1, item3)
     markup.row(item4, item5)
 
@@ -97,21 +99,23 @@ def start(message):
 
 # /Info
 @bot.message_handler(func=lambda message: message.text == "Info")
-def start(message):
-    bot.send_message(message.chat.id,
-                     "- Бот сайта: [Django.Help](https://django.help/)\n"
-                     "- Уведомляю о новых записках\n"
-                     "- Показываю статус бота\n"
-                     "- Дата ближайшего урока \n"
-                     "- Помогаю связать чат и ваш аккаунт\n"
-                     "- Обновить меню: /start\n",
-                     parse_mode='Markdown'
-                     )
+def info(message):
+
+    prefix = settings.HOST
+    answer = (f"- Бот сайта: [Django.Help]({prefix})\n"
+              f"- Уведомляю о новых записках\n"
+              f"- Показываю статус бота\n"
+              f"- Дата ближайшего урока \n"
+              f"- Помогаю связать чат и ваш аккаунт\n"
+              f"- Обновить меню: /start\n"
+              )
+
+    bot.send_message(message.chat.id, answer, parse_mode='Markdown')
 
 
 # /Django.Help
 @bot.message_handler(func=lambda message: message.text == "Django.Help")
-def start(message):
+def djangohelp(message):
     bot.send_message(message.chat.id,
                      "Адрес сайта: [Django.Help](https://django.help/)",
                      parse_mode='Markdown'
@@ -120,7 +124,7 @@ def start(message):
 
 # /Статус
 @bot.message_handler(func=lambda message: message.text == "Статус")
-def start(message):
+def status(message):
     user_id_telegram = message.chat.id
     username_telegram = message.chat.username
     first_name_telegram = message.chat.first_name
@@ -167,7 +171,7 @@ def start(message):
 
 # /Чат с ментором
 @bot.message_handler(func=lambda message: message.text == "Чат с ментором")
-def start(message):
+def chat(message):
     chat_link = 'https://t.me/VitalyLip'
     bot.send_message(message.chat.id,
                      chat_link,
@@ -176,7 +180,7 @@ def start(message):
 
 # /Расписание
 @bot.message_handler(func=lambda message: message.text == "Расписание")
-def start(message):
+def shedule(message):
     user_id_telegram = message.chat.id
     telegram_user = TelegramUser.objects.get(chat_id=user_id_telegram)
     username = telegram_user.user.username
@@ -209,3 +213,15 @@ def start(message):
                          f'Ваши занятия в ближайшие 7 дней:\n {answer}',
                          parse_mode='Markdown')
 
+
+@bot.message_handler(content_types=['location'])
+def handle_location(message):
+    chat_id = message.chat.id
+    latitude = message.location.latitude
+    longitude = message.location.longitude
+
+    # Теперь вы можете отправить координаты и текстовое сообщение на свой бэкенд или выполнить любое нужное действие
+    # Пример: Отправка координат и сообщения в вымышленную функцию send_location_and_message_to_backend
+    # send_location_and_message_to_backend(chat_id, latitude, longitude, user_message)
+
+    bot.send_message(chat_id, "Координаты и сообщение успешно отправлены!!!!!")

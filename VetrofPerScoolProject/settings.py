@@ -202,16 +202,18 @@ REST_FRAMEWORK = {
     ],
 }
 
-Q_CLUSTER = {
-    'name': 'DjangORM',
-    'workers': 4,
-    'retry': 600,
-    'timeout': 500,
-    'queue_limit': 50,
-    'bulk': 10,
-    'orm': 'default',
-    'catch_up': False,
-}
+# Q_CLUSTER = {
+#     'name': 'DjangORM',
+#     'workers': 4,
+#     'retry': 600,
+#     'timeout': 500,
+#     'queue_limit': 50,
+#     'bulk': 10,
+#     'orm': 'default',
+#     'catch_up': False,
+# }
+
+HOST = env('HOST')
 
 TELEGRAM_TOKEN = env('TELEGRAM_TOKEN')
 TELEGRAM_BOT_WEBHOOK_URL = env('TELEGRAM_BOT_WEBHOOK_URL')

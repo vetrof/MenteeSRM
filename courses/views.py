@@ -199,3 +199,14 @@ def lesson_detail_notion(request):
 
 def no_permissions(request):
     return render(request, 'no_permissions.html')
+
+
+# landing_pages
+def about_django(request):
+    return render(request, 'landing_django.html')
+
+
+def about_python(request):
+    return render(request, 'landing_django.html')
+
+
