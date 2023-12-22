@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.conf import settings
 import requests
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -19,6 +20,7 @@ def index_page(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Сообщение отправлено')  # Добавляем сообщение
+
             return render(request, 'message_succes.html')
 
     form = QuestionForm()
@@ -53,7 +55,7 @@ def lesson_detail(request, id):
     if request.user.is_anonymous:
         user_g2_status = False
         user_g3_status = False
-        user_g0_status = False
+        user_g0_status = True
     else:
         user_g2_status = request.user.profile.g2
         user_g3_status = request.user.profile.g3
@@ -201,12 +203,82 @@ def no_permissions(request):
     return render(request, 'no_permissions.html')
 
 
-# landing_pages
+# landing_page Django
 def about_django(request):
-    return render(request, 'landing_django.html')
+
+    price_1 = '0 ₽'
+    price_2 = '500 ₽'
+    price_3 = '1.000 ₽'
+
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    remote_addr = request.META.get('REMOTE_ADDR')
+    print('x_forwarded_for', x_forwarded_for)
+    print('remote_addr', remote_addr)
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+
+    IPINFO_KEY = settings.API_INFO_KEY
+    response = requests.get(f'https://ipinfo.io/{ip}?token={IPINFO_KEY}')
+    data = response.json()
+
+    try:
+        match data['country']:
+            case 'KZ':
+                price_1 = '0 ₸'
+                price_2 = '2.500 ₸'
+                price_3 = '5.000 ₸'
+            case 'RU':
+                price_1 = '0 ₽'
+                price_2 = '500 ₽'
+                price_3 = '1.000 ₽'
+            case _:
+                price_1 = '0 $'
+                price_2 = '5 $'
+                price_3 = '10 $'
+    except Exception as err:
+        print(err)
+
+    return render(request, 'landing_django_mobi.html', {'price_1': price_1, 'price_2': price_2, 'price_3': price_3, 'data': data})
 
 
+# landing_page Python
 def about_python(request):
-    return render(request, 'landing_django.html')
+    price_1 = '0 ₽'
+    price_2 = '500 ₽'
+    price_3 = '1.000 ₽'
+
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    print(x_forwarded_for, ip)
+    IPINFO_KEY = settings.API_INFO_KEY
+    response = requests.get(f'https://ipinfo.io/{ip}?token={IPINFO_KEY}')
+    data = response.json()
+
+    try:
+        match data['country']:
+            case 'KZ':
+                price_1 = '0 ₸'
+                price_2 = '2.500 ₸'
+                price_3 = '5.000 ₸'
+            case 'RU':
+                price_1 = '0 ₽'
+                price_2 = '500 ₽'
+                price_3 = '1.000 ₽'
+            case _:
+                price_1 = '0 $'
+                price_2 = '5 $'
+                price_3 = '10 $'
+    except Exception as err:
+        print(err)
+
+    return render(request, 'landing_python_mobi.html',
+                  {'price_1': price_1, 'price_2': price_2, 'price_3': price_3,
+                   'data': data})
+
 
 

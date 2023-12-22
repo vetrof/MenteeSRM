@@ -31,6 +31,7 @@ urlpatterns = [
     path('tbot/', include('tbot.urls')),
     path('tbot_maxim/', include('tbot_maxim.urls')),
     path('', include('courses.urls')),
+    path('2ip/', include('iptester.urls'))
 
 ]
 

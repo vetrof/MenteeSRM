@@ -13,3 +13,4 @@ class QuestionForm(forms.ModelForm):
     class Meta:
         model = Question
         fields = ['client_info']
+
