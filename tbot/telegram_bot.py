@@ -226,3 +226,12 @@ def handle_location(message):
     # send_location_and_message_to_backend(chat_id, latitude, longitude, user_message)
 
     bot.send_message(chat_id, "Координаты и сообщение успешно отправлены!!!!!")
+
+
+@bot.message_handler(commands=['image'])
+def test_image_answer(message):
+
+    with open('static/img/blog.png', 'rb') as photo:
+
+        bot.send_photo(message.chat.id, photo=photo, caption='Caption for the image')
+        # bot.send_message(message.chat.id, 'yohoho')

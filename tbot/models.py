@@ -23,4 +23,5 @@ class TgSpam(models.Model):
     all_tg_user = models.BooleanField(default=False)
     title = models.CharField(max_length=100)
     message = MarkdownxField()
+    image = models.ImageField(upload_to='tg_spam_image', null=True, blank=True)
 

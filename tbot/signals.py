@@ -8,6 +8,7 @@ from tbot.telegram_bot import bot
 # from django_q.models import Schedule
 from datetime import timedelta
 from django.utils import timezone
+from PIL import Image
 
 
 @receiver(post_save, sender=Question)
@@ -27,10 +28,23 @@ def spam_all_tg_user(sender, instance, created, **kwargs):
     if instance.all_tg_user:
         tg_users = TelegramUser.objects.all()
         id_list = []
+        image_link = False
+        text = f'{instance.title}\n{instance.message}'
+
+        # create list id
         for tg_user in tg_users:
             id_list.append(tg_user.chat_id)
-        text = f'{instance.title}\n{instance.message}'
-        bot.listSender(id_list, text)
+
+        # add link to image
+        if instance.image:
+            image_link = instance.image.path
+
+        # send message
+        bot.list_sender_with_optional_image(
+            id_list=id_list,
+            text=text,
+            image_link=image_link
+        )
 
 
 @receiver(signal=post_save, sender=Notes)
