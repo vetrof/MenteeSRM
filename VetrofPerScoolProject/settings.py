@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_dbml',
-    'django_q',
     'message',
     'tbot',
     "debug_toolbar",
