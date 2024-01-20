@@ -281,4 +281,41 @@ def about_python(request):
                    'data': data})
 
 
+def about_fastapi(request):
+    price_1 = '0 ₽'
+    price_2 = '500 ₽'
+    price_3 = '1.000 ₽'
+
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    print(x_forwarded_for, ip)
+    IPINFO_KEY = settings.API_INFO_KEY
+    response = requests.get(f'https://ipinfo.io/{ip}?token={IPINFO_KEY}')
+    data = response.json()
+
+    try:
+        match data['country']:
+            case 'KZ':
+                price_1 = '0 ₸'
+                price_2 = '2.500 ₸'
+                price_3 = '5.000 ₸'
+            case 'RU':
+                price_1 = '0 ₽'
+                price_2 = '500 ₽'
+                price_3 = '1.000 ₽'
+            case _:
+                price_1 = '0 $'
+                price_2 = '5 $'
+                price_3 = '10 $'
+    except Exception as err:
+        print(err)
+
+    return render(request, 'landing_fastapi_mobi.html',
+                  {'price_1': price_1, 'price_2': price_2, 'price_3': price_3,
+                   'data': data})
+
+
 

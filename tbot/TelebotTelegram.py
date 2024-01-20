@@ -11,15 +11,14 @@ class Telegram(telebot.TeleBot):
         except:
             pass
 
-    def list_sender_with_optional_image(self, id_list, text, image_link=False):
-        if image_link:
+    def list_sender_with_optional_image(self, id_list, text, image=False):
+        if image:
                 for chat_id in id_list:
-                    with open(image_link, 'rb') as image:
-                        try:
-                            self.send_photo(chat_id, photo=image, caption=text, parse_mode='Markdown')
-                            time.sleep(0.3)
-                        except Exception as err:
-                            print(chat_id, 'image ERROR', err)
+                    try:
+                        self.send_photo(chat_id, photo=image, caption=text, parse_mode='Markdown')
+                        time.sleep(0.3)
+                    except Exception as err:
+                        print(chat_id, 'image ERROR', err)
 
         else:
             for chat_id in id_list:

@@ -2,7 +2,6 @@ from django.conf import settings
 import requests
 
 from django.shortcuts import render
-from django.http import HttpResponse
 
 
 def iptester(request):
@@ -18,13 +17,10 @@ def iptester(request):
         f'https://ipinfo.io/{ip}?token={settings.API_INFO_KEY}')
     data = response.json()
 
-    print(data)
-    return render(
-        request,
-        '2ip.html',
-        {
+    context = {
             'x_forward': x_forward,
             'remote_addr': remote_addr,
             'data': data
         }
-    )
+
+    return render(request, '2ip.html', context)

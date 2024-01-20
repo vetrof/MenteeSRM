@@ -4,11 +4,6 @@ from courses.models import Question, Notes
 from tbot.models import TgSpam, TelegramUser
 from django.contrib.auth.models import User
 from tbot.telegram_bot import bot
-# from django_q.tasks import async_task, schedule
-# from django_q.models import Schedule
-from datetime import timedelta
-from django.utils import timezone
-from PIL import Image
 
 
 @receiver(post_save, sender=Question)
@@ -28,7 +23,7 @@ def spam_all_tg_user(sender, instance, created, **kwargs):
     if instance.all_tg_user:
         tg_users = TelegramUser.objects.all()
         id_list = []
-        image_link = False
+        image = False
         text = f'{instance.title}\n{instance.message}'
 
         # create list id
@@ -37,13 +32,14 @@ def spam_all_tg_user(sender, instance, created, **kwargs):
 
         # add link to image
         if instance.image:
-            image_link = instance.image.path
+            with open(instance.image.path, 'rb') as image:
+                image = image.read()
 
         # send message
         bot.list_sender_with_optional_image(
             id_list=id_list,
             text=text,
-            image_link=image_link
+            image=image
         )
 
 
