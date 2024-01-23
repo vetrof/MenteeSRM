@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 
 
+
 def telegram(request):
     return render(request, 'telegram.html')
 
