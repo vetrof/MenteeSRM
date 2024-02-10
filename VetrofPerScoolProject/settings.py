@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 import environ
+from celery.schedules import crontab
 
 env = environ.Env(
     DEBUG=(bool, False),
@@ -43,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'courses',
+    'courses.apps.CoursesConfig',
     'widget_tweaks',
     'markdownx',
     'django_extensions',
@@ -51,12 +52,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_dbml',
-    'message',
-    'tbot',
+    'message.apps.MessageConfig',
+    'tbot.apps.TbotConfig',
     "debug_toolbar",
-    "taggit",
-    'tbot_maxim',
-    'gcal',
+    "taggit.apps.TaggitAppConfig",
+    'tbot_maxim.apps.TbotMaximConfig',
+    'gcal.apps.GcalConfig',
+    'news.apps.NewsConfig'
 ]
 
 MIDDLEWARE = [
@@ -226,3 +228,20 @@ API_INFO_KEY = env('API_INFO_KEY')
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+# celery
+CELERY_BROKER_URL = 'redis://redis:6379/0'  # URL брокера сообщений (в данном случае Redis)
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+
+
+CELERY_BEAT_SCHEDULE = {
+    'get_news_every_hour': {
+        'task': 'news.tasks.get_news_to_dump_file',
+        'schedule': crontab(minute=0, hour='*'),  # Запуск каждый час в начале часа
+
+    },
+    'task_every_second': {
+        'task': 'news.tasks.test_task',
+        'schedule': 1.0,  # Интервал в одну секунду
+    },
+}

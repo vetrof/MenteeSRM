@@ -8,14 +8,26 @@ services:
       - .:/code
     ports:
       - 8000:8000
-    depends_on:
-      - db
-  db:
-    image: postgres:13
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    environment:
-      - "POSTGRES_HOST_AUTH_METHOD=trust"
 
-volumes:
-  postgres_data:
+  celery_worker:
+    build: .
+    command: celery -A VetrofPerScoolProject worker --loglevel=info
+    volumes:
+      - .:/code
+
+  celery_beat:
+    build: .
+    command: celery -A VetrofPerScoolProject beat -l info
+    volumes:
+      - .:/code
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  flower:
+    image: mher/flower:0.9.5
+    command: [ 'flower', '--broker=redis://redis:6379', '--port=5555' ]
+    ports:
+      - 5555:5555
