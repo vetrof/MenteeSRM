@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 import environ
-from celery.schedules import crontab
+# from celery.schedules import crontab
 
 env = environ.Env(
     DEBUG=(bool, False),
@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     "taggit.apps.TaggitAppConfig",
     'tbot_maxim.apps.TbotMaximConfig',
     'gcal.apps.GcalConfig',
-    'news.apps.NewsConfig'
+    'news.apps.NewsConfig',
+    'django_q',
 ]
 
 MIDDLEWARE = [
@@ -136,7 +137,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru-RU'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Almaty'
 
 USE_I18N = True
 
@@ -203,16 +204,6 @@ REST_FRAMEWORK = {
     ],
 }
 
-# Q_CLUSTER = {
-#     'name': 'DjangORM',
-#     'workers': 4,
-#     'retry': 600,
-#     'timeout': 500,
-#     'queue_limit': 50,
-#     'bulk': 10,
-#     'orm': 'default',
-#     'catch_up': False,
-# }
 
 HOST = env('HOST')
 
@@ -229,19 +220,30 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-# celery
-CELERY_BROKER_URL = 'redis://redis:6379/0'  # URL брокера сообщений (в данном случае Redis)
-CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+# # celery
+# CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+# CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
+#
+#
+# CELERY_BEAT_SCHEDULE = {
+#     'get_news_every_hour': {
+#         'task': 'news.tasks.get_news_to_dump_file',
+#         'schedule': crontab(minute=0, hour='*'),  # Запуск каждый час в начале часа
+#
+#     },
+#     'task_every_10_second': {
+#         'task': 'news.tasks.test_task',
+#         'schedule': 10.0,
+#     },
+# }
 
-
-CELERY_BEAT_SCHEDULE = {
-    'get_news_every_hour': {
-        'task': 'news.tasks.get_news_to_dump_file',
-        'schedule': crontab(minute=0, hour='*'),  # Запуск каждый час в начале часа
-
-    },
-    'task_every_second': {
-        'task': 'news.tasks.test_task',
-        'schedule': 1.0,  # Интервал в одну секунду
-    },
+Q_CLUSTER = {
+    'name': 'DjangORM',
+    'workers': 4,
+    'retry': 600,
+    'timeout': 500,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default',
+    'catch_up': False,
 }

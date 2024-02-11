@@ -4,7 +4,7 @@ from courses.models import Question
 from django.http import HttpResponse
 from django.conf import settings
 import telebot
-from django_q.tasks import async_task
+
 
 
 def new_answer_for_superuser():
